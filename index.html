@@ -1,0 +1,556 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1.5rem 1rem;max-width:960px;margin:0 auto}
+.page-header{display:flex;align-items:center;gap:14px;margin-bottom:2rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.header-icon{width:42px;height:42px;border-radius:var(--border-radius-md);background:var(--color-background-info);display:flex;align-items:center;justify-content:center}
+.header-icon svg{width:22px;height:22px;stroke:var(--color-text-info);fill:none;stroke-width:2}
+.page-title{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.page-sub{font-size:13px;color:var(--color-text-secondary);margin-top:2px}
+.intervention-badge{margin-left:auto;background:var(--color-background-info);color:var(--color-text-info);font-size:12px;font-weight:500;padding:6px 14px;border-radius:var(--border-radius-md);font-family:var(--font-mono)}
+
+.section{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-info);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:0.5px;background:var(--color-border-tertiary)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:var(--color-text-secondary);font-weight:500}
+input[type=text],input[type=date],input[type=tel],input[type=number],input[type=time],select,textarea{width:100%;font-size:13px;font-family:var(--font-sans);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:7px 10px;color:var(--color-text-primary);outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--color-border-info)}
+textarea{resize:vertical;min-height:70px}
+.radio-row{display:flex;gap:6px;margin-bottom:4px}
+.r-btn{flex:1;padding:7px 8px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);font-size:12px;cursor:pointer;text-align:center;color:var(--color-text-secondary);transition:all .15s;font-family:var(--font-sans)}
+.r-btn.active{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info);font-weight:500}
+.check-row{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);margin-bottom:6px;transition:all .15s;cursor:pointer}
+.check-row:hover{border-color:var(--color-border-secondary)}
+.check-row.checked{background:var(--color-background-info);border-color:var(--color-border-info)}
+.check-box{width:16px;height:16px;border:1.5px solid var(--color-border-secondary);border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.check-row.checked .check-box{background:var(--color-text-info);border-color:var(--color-text-info)}
+.check-box svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:3;display:none}
+.check-row.checked .check-box svg{display:block}
+.check-label{font-size:13px;color:var(--color-text-primary);flex:1}
+.sub-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+
+/* Blessures table */
+.inj-table{width:100%;border-collapse:collapse;font-size:11px}
+.inj-table th{padding:6px 8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);font-weight:500;text-align:center}
+.inj-table td{padding:4px 6px;border:0.5px solid var(--color-border-tertiary);text-align:center;vertical-align:middle}
+.inj-table td:first-child{text-align:left;font-size:11px;color:var(--color-text-secondary);font-weight:500;padding-left:8px;background:var(--color-background-secondary)}
+.cell-check{width:22px;height:22px;border:1.5px solid var(--color-border-secondary);border-radius:4px;cursor:pointer;margin:auto;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cell-check:hover{border-color:var(--color-border-info)}
+.cell-check.on{border-color:transparent}
+.cell-check.on svg{display:block}
+.cell-check svg{width:12px;height:12px;fill:none;stroke-width:3;display:none}
+
+/* Mannequin */
+.manni-wrap{display:flex;justify-content:center;margin:1rem 0}
+.manni-svg{overflow:visible}
+.zone-overlay{transition:all .2s;cursor:default}
+.legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:.75rem}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* Glasgow */
+.gcs-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.gcs-label{font-size:12px;color:var(--color-text-secondary);width:160px;flex-shrink:0}
+.gcs-btns{display:flex;gap:4px;flex:1}
+.gcs-btn{width:32px;height:32px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);cursor:pointer;font-size:12px;color:var(--color-text-secondary);transition:all .15s;font-family:var(--font-sans)}
+.gcs-btn:hover{border-color:var(--color-border-info);color:var(--color-text-info)}
+.gcs-btn.on{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info);font-weight:500}
+.gcs-total{font-family:var(--font-mono);font-size:22px;font-weight:500;text-align:center;padding:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
+.gcs-score-label{font-size:11px;color:var(--color-text-secondary);text-align:center;margin-top:4px}
+
+/* Parametres */
+.param-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.param-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px}
+.param-card label{font-size:11px;color:var(--color-text-secondary);display:block;margin-bottom:4px}
+.param-input-row{display:flex;align-items:center;gap:4px}
+.param-unit{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
+
+/* Matériel */
+.mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mat-item{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)}
+.mat-item input[type=number]{width:50px;text-align:center;padding:4px 6px}
+.mat-item span{font-size:12px;color:var(--color-text-secondary);flex:1;line-height:1.3}
+
+/* Signature */
+.sig-canvas{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);cursor:crosshair;width:100%;height:120px;touch-action:none}
+.sig-actions{display:flex;gap:6px;margin-top:6px}
+.btn-sm{padding:6px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;font-size:12px;color:var(--color-text-primary);font-family:var(--font-sans);transition:all .15s}
+.btn-sm:hover{background:var(--color-background-secondary)}
+.btn-primary{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info)}
+.btn-primary:hover{opacity:.85}
+.btn-submit{width:100%;padding:12px;background:var(--color-background-info);border:0.5px solid var(--color-border-info);border-radius:var(--border-radius-lg);font-size:15px;font-weight:500;color:var(--color-text-info);cursor:pointer;font-family:var(--font-sans);margin-top:.5rem;transition:all .15s}
+.btn-submit:hover{opacity:.85}
+.minor-badge{display:inline-block;background:var(--color-background-warning);color:var(--color-text-warning);font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);font-weight:500;margin-left:8px;vertical-align:middle}
+.ta-label{display:block;font-input-row{display:flex};gap:4px;align-items:center}
+.ta-sep{font-size:18px;color:var(--color-text-secondary);padding:0 2px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);padding:10px 20px;border-radius:var(--border-radius-lg);font-size:13px;color:var(--color-text-primary);box-shadow:0 2px 12px rgba(0,0,0,.08);opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
+.toast.show{opacity:1}
+</style>
+
+<div class="wrap">
+
+<div class="page-header">
+  <div class="header-icon">
+    <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+  </div>
+  <div>
+    <div class="page-title">Fiche de prise en charge</div>
+    <div class="page-sub">Centre Hospitalier de Liège — Unité médicale d'intervention</div>
+  </div>
+  <div class="intervention-badge" id="numIntervention">N° —</div>
+</div>
+
+<!-- SECTION INFORMATIONS -->
+<div class="section">
+  <div class="section-label">Informations patient</div>
+  <div class="grid2" style="margin-bottom:10px">
+    <div class="field"><label>Nom</label><input type="text" id="nom" placeholder="Nom de famille"></div>
+    <div class="field"><label>Prénom</label><input type="text" id="prenom" placeholder="Prénom"></div>
+  </div>
+  <div class="grid3" style="margin-bottom:10px">
+    <div class="field">
+      <label>Date de naissance <span id="minorBadge" class="minor-badge" style="display:none">Mineur</span></label>
+      <input type="date" id="dob" onchange="checkMinor()">
+    </div>
+    <div class="field"><label>Téléphone</label><input type="tel" id="tel" placeholder="+32 000 00 00 00"></div>
+    <div class="field">
+      <label>Sexe</label>
+      <div class="radio-row" style="margin-top:4px">
+        <button class="r-btn" onclick="setGender(this,'M')">Masculin</button>
+        <button class="r-btn" onclick="setGender(this,'F')">Féminin</button>
+        <button class="r-btn" onclick="setGender(this,'A')">Autre</button>
+      </div>
+    </div>
+  </div>
+  <div class="field"><label>Adresse</label><input type="text" id="adresse" placeholder="Rue, numéro, ville"></div>
+</div>
+
+<!-- SECTION PRISE EN CHARGE -->
+<div class="section">
+  <div class="section-label">Prise en charge</div>
+  <div id="pcRows"></div>
+  <div class="field" style="margin-top:10px"><label>Autres soins</label><textarea id="autresSoins" placeholder="Précisez..."></textarea></div>
+</div>
+
+<!-- SECTION BLESSURES -->
+<div class="section">
+  <div class="section-label">Blessures et douleurs</div>
+  <div style="overflow-x:auto;margin-bottom:1rem">
+    <table class="inj-table" id="injTable"></table>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="field"><label>Autres blessures</label><textarea id="autresBlessures" placeholder="Précisez..."></textarea></div>
+    </div>
+    <div>
+      <div class="manni-wrap">
+        <svg class="manni-svg" width="140" height="240" viewBox="0 0 140 240" id="manni"></svg>
+      </div>
+      <div class="legend" id="manni-legend"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION GLASGOW -->
+<div class="section">
+  <div class="section-label">Score de Glasgow</div>
+  <div id="gcsRows"></div>
+  <div style="max-width:180px;margin:0 auto;margin-top:12px">
+    <div class="gcs-total"><span id="gcsTotalVal">—</span> <span style="font-size:14px;color:var(--color-text-secondary)">/15</span></div>
+    <div class="gcs-score-label" id="gcsInterp">Aucune sélection</div>
+  </div>
+</div>
+
+<!-- SECTION RESPIRATION -->
+<div class="section">
+  <div class="section-label">Respiration pulmonaire</div>
+  <div id="respRows"></div>
+</div>
+
+<!-- SECTION ARYTHMIE -->
+<div class="section">
+  <div class="section-label">Arythmie</div>
+  <div id="arytRows"></div>
+</div>
+
+<!-- SECTION PARAMETRES -->
+<div class="section">
+  <div class="section-label">Paramètres vitaux</div>
+  <div class="param-group" id="paramGroup"></div>
+</div>
+
+<!-- SECTION MATÉRIEL -->
+<div class="section">
+  <div class="section-label">Matériel utilisé</div>
+  <div class="mat-grid" id="matGrid"></div>
+</div>
+
+<!-- SECTION FIN -->
+<div class="section">
+  <div class="section-label">Fin de prise en charge</div>
+  <div class="grid2" style="margin-bottom:10px">
+    <div class="field"><label>Déroulé de l'opération</label><textarea id="deroule" placeholder="Décrivez le déroulement chronologique..."></textarea></div>
+    <div class="field"><label>Développement du soin</label><textarea id="developpement" placeholder="Détails des soins prodigués..."></textarea></div>
+  </div>
+  <div class="check-row" id="finCheck" onclick="toggleCheck(this)">
+    <div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    <div class="check-label" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span>Fin de prise en charge</span>
+      <input type="datetime-local" id="finDateTime" onclick="e=>e.stopPropagation()" style="width:auto;font-size:12px" onchange="this.parentElement.closest('.check-row').classList.add('checked')">
+    </div>
+  </div>
+</div>
+
+<!-- SECTION SIGNATURE -->
+<div class="section">
+  <div class="section-label">Signature du soignant</div>
+  <div class="field" style="margin-bottom:8px"><label>Nom du soignant / rédacteur</label><input type="text" id="sigNom" placeholder="Nom complet"></div>
+  <canvas class="sig-canvas" id="sigCanvas" width="900" height="120"></canvas>
+  <div class="sig-actions">
+    <button class="btn-sm" onclick="clearSig()">Effacer</button>
+    <button class="btn-sm btn-primary" onclick="exportSig()">Valider la signature</button>
+  </div>
+</div>
+
+<button class="btn-submit" onclick="submitForm()">Enregistrer la fiche de prise en charge</button>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const genNum = () => {
+  const d = new Date();
+  const p = v => String(v).padStart(2,'0');
+  return `INT-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.floor(Math.random()*9000+1000)}`;
+};
+document.getElementById('numIntervention').textContent = genNum();
+
+function checkMinor() {
+  const v = document.getElementById('dob').value;
+  if(!v) return;
+  const age = (Date.now() - new Date(v)) / (1000*60*60*24*365.25);
+  document.getElementById('minorBadge').style.display = age < 18 ? 'inline-block' : 'none';
+}
+
+let gender = '';
+function setGender(btn, v) {
+  gender = v;
+  btn.closest('.radio-row').querySelectorAll('.r-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── PRISE EN CHARGE ──
+const pcTypes = [
+  {id:'equipe', label:'Par Équipe'},
+  {id:'ambulance', label:'Par Ambulance'},
+  {id:'smur', label:'Par SMUR'},
+  {id:'hopital', label:'Par Hôpital'},
+  {id:'refus', label:'Refus de soins', noSoignants:true},
+  {id:'retour', label:'Retour à la vie active', noSoignants:true},
+];
+const pcContainer = document.getElementById('pcRows');
+pcTypes.forEach(t => {
+  const row = document.createElement('div');
+  row.className = 'check-row';
+  row.id = 'pc_'+t.id;
+  row.innerHTML = `<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    <div class="check-label" style="width:100%">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span>${t.label}</span>
+        ${!t.noSoignants ? `<input type="text" placeholder="Noms des soignants" style="flex:1;min-width:150px;font-size:12px" onclick="event.stopPropagation()">` : ''}
+        <input type="datetime-local" style="width:auto;font-size:12px" onclick="event.stopPropagation()">
+      </div>
+    </div>`;
+  row.addEventListener('click', function(e) {
+    if(e.target.tagName === 'INPUT') return;
+    toggleCheck(this);
+  });
+  pcContainer.appendChild(row);
+});
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+}
+
+// ── BLESSURES TABLE ──
+const injCols = ['Tête','Thorax','Abdomen','MS Droit','MS Gauche','MI Droit','MI Gauche'];
+const injRows = ['Abrasion','Lacération','Traumatisme','Douleur aiguë','Contusion','Plaie balistique','Brûlure','Fracture','Luxation','Œdème'];
+const injColors = {
+  'Abrasion':'#378ADD','Lacération':'#E24B4A','Traumatisme':'#BA7517','Douleur aiguë':'#D4537E',
+  'Contusion':'#1D9E75','Plaie balistique':'#7F77DD','Brûlure':'#EF9F27','Fracture':'#639922',
+  'Luxation':'#3B6D11','Œdème':'#993C1D'
+};
+const injState = {};
+injCols.forEach(c => {injState[c] = {};});
+
+const tbl = document.getElementById('injTable');
+let thHtml = '<tr><th></th>';
+injCols.forEach(c => thHtml += `<th>${c}</th>`);
+thHtml += '</tr>';
+tbl.innerHTML = thHtml;
+injRows.forEach(r => {
+  const tr = document.createElement('tr');
+  let html = `<td>${r}</td>`;
+  injCols.forEach(c => {
+    const key = r+'|'+c;
+    html += `<td><div class="cell-check" id="cc_${CSS.escape(key)}" onclick="toggleCell('${r}','${c}')">
+      <svg viewBox="0 0 12 12" style="stroke:${injColors[r]};width:12px;height:12px"><polyline points="2,6 5,9 10,3"/></svg>
+    </div></td>`;
+  });
+  tr.innerHTML = html;
+  tbl.appendChild(tr);
+});
+
+function toggleCell(row, col) {
+  if (!injState[col][row]) injState[col][row] = true; else delete injState[col][row];
+  const key = row+'|'+col;
+  const el = document.getElementById('cc_'+CSS.escape(key));
+  if (injState[col][row]) {
+    el.classList.add('on');
+    el.style.background = injColors[row]+'33';
+    el.style.borderColor = injColors[row];
+  } else {
+    el.classList.remove('on');
+    el.style.background = '';
+    el.style.borderColor = '';
+  }
+  updateMannequin();
+}
+
+// ── MANNEQUIN ──
+const zoneMap = {
+  'Tête':       [{type:'ellipse',cx:70,cy:22,rx:16,ry:18}],
+  'Thorax':     [{type:'rect',x:50,y:46,w:40,h:42,r:4}],
+  'Abdomen':    [{type:'rect',x:50,y:92,w:40,h:30,r:4}],
+  'MS Droit':   [{type:'rect',x:24,y:48,w:22,h:60,r:4}],
+  'MS Gauche':  [{type:'rect',x:94,y:48,w:22,h:60,r:4}],
+  'MI Droit':   [{type:'rect',x:52,y:128,w:18,h:80,r:4}],
+  'MI Gauche':  [{type:'rect',x:70,y:128,w:18,h:80,r:4}],
+};
+
+function drawMannequin() {
+  const svg = document.getElementById('manni');
+  svg.innerHTML = `
+    <ellipse cx="70" cy="22" rx="16" ry="18" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <rect x="50" y="46" width="40" height="42" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <rect x="50" y="92" width="40" height="30" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <rect x="24" y="48" width="22" height="60" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <rect x="94" y="48" width="22" height="60" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <rect x="52" y="126" width="18" height="82" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <rect x="70" y="126" width="18" height="82" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <line x1="50" y1="46" x2="26" y2="48" stroke="var(--color-border-secondary)" stroke-width="1.5"/>
+    <line x1="90" y1="46" x2="94" y2="48" stroke="var(--color-border-secondary)" stroke-width="1.5"/>
+    <line x1="58" y1="122" x2="56" y2="126" stroke="var(--color-border-secondary)" stroke-width="1.5"/>
+    <line x1="72" y1="122" x2="74" y2="126" stroke="var(--color-border-secondary)" stroke-width="1.5"/>
+    <rect x="50" y="122" width="40" height="6" rx="2" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+  `;
+}
+
+function updateMannequin() {
+  drawMannequin();
+  const svg = document.getElementById('manni');
+  const legend = document.getElementById('manni-legend');
+  const legendItems = {};
+
+  Object.entries(zoneMap).forEach(([zone, shapes]) => {
+    const injuries = Object.entries(injState[zone] || {}).filter(([,v]) => v).map(([r]) => r);
+    if (!injuries.length) return;
+    const n = injuries.length;
+    shapes.forEach(s => {
+      if (n === 1) {
+        const col = injColors[injuries[0]];
+        legendItems[injuries[0]] = col;
+        appendShape(svg, s, col+'55', col, 1.5);
+      } else {
+        const arcW = s.type === 'ellipse' ? s.rx * 2 : s.w;
+        const arcH = s.type === 'ellipse' ? s.ry * 2 : s.h;
+        const segW = arcW / n;
+        const x0 = s.type === 'ellipse' ? s.cx - s.rx : s.x;
+        const y0 = s.type === 'ellipse' ? s.cy - s.ry : s.y;
+        const r = s.r || 4;
+        injuries.forEach((inj, i) => {
+          const col = injColors[inj];
+          legendItems[inj] = col;
+          const sx = x0 + i * segW;
+          const g = document.createElementNS('http://www.w3.org/2000/svg','rect');
+          g.setAttribute('x', sx); g.setAttribute('y', y0);
+          g.setAttribute('width', segW); g.setAttribute('height', arcH);
+          g.setAttribute('fill', col+'77'); g.setAttribute('stroke', col);
+          g.setAttribute('stroke-width','1');
+          g.setAttribute('rx', i === 0 ? r : 0);
+          svg.appendChild(g);
+        });
+      }
+    });
+  });
+
+  legend.innerHTML = Object.entries(legendItems).map(([inj, col]) =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${col}"></div>${inj}</div>`
+  ).join('');
+}
+
+function appendShape(svg, s, fill, stroke, sw) {
+  let el;
+  if (s.type === 'ellipse') {
+    el = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+    el.setAttribute('cx',s.cx); el.setAttribute('cy',s.cy);
+    el.setAttribute('rx',s.rx); el.setAttribute('ry',s.ry);
+  } else {
+    el = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    el.setAttribute('x',s.x); el.setAttribute('y',s.y);
+    el.setAttribute('width',s.w); el.setAttribute('height',s.h);
+    el.setAttribute('rx', s.r || 4);
+  }
+  el.setAttribute('fill', fill); el.setAttribute('stroke', stroke);
+  el.setAttribute('stroke-width', sw);
+  svg.appendChild(el);
+}
+
+drawMannequin();
+
+// ── GLASGOW ──
+const gcsData = [
+  {id:'yeux', label:'Ouverture des yeux', max:4, labels:['1 — Nulle','2 — À la douleur','3 — Au bruit','4 — Spontanée']},
+  {id:'verbale', label:'Réponse verbale', max:5, labels:['1 — Nulle','2 — Sons incompréhensibles','3 — Mots inappropriés','4 — Confuse','5 — Orientée']},
+  {id:'motrice', label:'Réponse motrice', max:6, labels:['1 — Nulle','2 — Extension','3 — Flexion anormale','4 — Retrait','5 — Localisatrice','6 — Sur ordre']},
+];
+const gcsVals = {yeux:0, verbale:0, motrice:0};
+const gcsContainer = document.getElementById('gcsRows');
+gcsData.forEach(g => {
+  const row = document.createElement('div');
+  row.className = 'gcs-row';
+  let btns = '';
+  for(let i=1;i<=g.max;i++) btns += `<button class="gcs-btn" title="${g.labels[i-1]}" onclick="setGcs('${g.id}',${i},this)">${i}</button>`;
+  row.innerHTML = `<div class="gcs-label">${g.label}</div><div class="gcs-btns">${btns}</div>`;
+  gcsContainer.appendChild(row);
+});
+function setGcs(id, val, btn) {
+  gcsVals[id] = val;
+  btn.closest('.gcs-btns').querySelectorAll('.gcs-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const total = gcsVals.yeux + gcsVals.verbale + gcsVals.motrice;
+  const filled = [gcsVals.yeux, gcsVals.verbale, gcsVals.motrice].filter(v => v > 0).length;
+  document.getElementById('gcsTotalVal').textContent = filled === 3 ? total : '—';
+  const interp = total >= 13 ? 'Légère (13–15)' : total >= 9 ? 'Modérée (9–12)' : total >= 3 ? 'Sévère (3–8)' : 'Sélection en cours';
+  document.getElementById('gcsInterp').textContent = filled === 3 ? interp : 'Sélection en cours';
+}
+
+// ── RESPIRATION ──
+const respItems = ['Tachypnée (> 25 cycles/min)','Eupnée (12–20 cycles/min)','Bradypnée (< 10 cycles/min)'];
+const respContainer = document.getElementById('respRows');
+let selResp = '';
+respItems.forEach(r => {
+  const row = document.createElement('div');
+  row.className = 'check-row';
+  row.innerHTML = `<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label">${r}</div>`;
+  row.onclick = () => {
+    respContainer.querySelectorAll('.check-row').forEach(x => x.classList.remove('checked'));
+    row.classList.add('checked');
+    selResp = r;
+  };
+  respContainer.appendChild(row);
+});
+
+// ── ARYTHMIE ──
+const arytItems = ['Asystolie','Fibrillation auriculaire','Fibrillation ventriculaire','Infarctus'];
+const arytContainer = document.getElementById('arytRows');
+arytItems.forEach(r => {
+  const row = document.createElement('div');
+  row.className = 'check-row';
+  row.innerHTML = `<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label">${r}</div>`;
+  row.onclick = () => toggleCheck(row);
+  arytContainer.appendChild(row);
+});
+
+// ── PARAMÈTRES ──
+const params = [
+  {id:'ta_sys', label:'Tension artérielle', type:'ta'},
+  {id:'pls', label:'Pouls', unit:'BPM'},
+  {id:'spo2', label:'SpO₂', unit:'%'},
+  {id:'glyc', label:'Glycémie', unit:'mg/dL'},
+  {id:'temp', label:'Température', unit:'°C'},
+  {id:'heure', label:'Heure de mesure', type:'time'},
+];
+const pg = document.getElementById('paramGroup');
+params.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'param-card';
+  if (p.type === 'ta') {
+    card.innerHTML = `<label>Tension artérielle</label><div style="display:flex;align-items:center;gap:4px"><input type="number" id="ta_sys" placeholder="Sys" style="width:60px;text-align:center"><span style="color:var(--color-text-secondary)">/</span><input type="number" id="ta_dia" placeholder="Dia" style="width:60px;text-align:center"><span class="param-unit">mmHg</span></div>`;
+  } else if (p.type === 'time') {
+    card.innerHTML = `<label>${p.label}</label><input type="time" id="${p.id}">`;
+  } else {
+    card.innerHTML = `<label>${p.label}</label><div class="param-input-row"><input type="number" id="${p.id}" step="0.1" placeholder="—"><span class="param-unit">${p.unit}</span></div>`;
+  }
+  pg.appendChild(card);
+});
+
+// ── MATÉRIEL ──
+const mats = [
+  'Compresse 7,5×7,5','Bande gaze','Pansement hémostatique','LP','Cédium®','Poche de sang',
+  'Kit réanimation','Kit chirurgical','Injecteur épinéphrine','Injecteur morphine',
+  'Injecteur fentanyl','Propofol','Garrot','Pansement terrain','Pansement compressif',
+  'ECG','LUCAS 3','Bandage élastique','Collier cervical',
+  'Accès intra-osseux','Accès intraveineux','Prise de glycémie'
+];
+const mg = document.getElementById('matGrid');
+mats.forEach(m => {
+  const item = document.createElement('div');
+  item.className = 'mat-item';
+  item.innerHTML = `<input type="number" min="0" value="0" style="width:48px;text-align:center;padding:4px"><span>${m}</span>`;
+  mg.appendChild(item);
+});
+
+// ── SIGNATURE ──
+const canvas = document.getElementById('sigCanvas');
+const ctx = canvas.getContext('2d');
+let drawing = false, lastX = 0, lastY = 0;
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return [(src.clientX - r.left) * (canvas.width / r.width), (src.clientY - r.top) * (canvas.height / r.height)];
+}
+canvas.addEventListener('mousedown', e => { drawing=true; [lastX,lastY]=getPos(e); });
+canvas.addEventListener('mousemove', e => {
+  if (!drawing) return;
+  const [x,y] = getPos(e);
+  ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y);
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary') || '#000';
+  ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke();
+  [lastX,lastY] = [x,y];
+});
+canvas.addEventListener('mouseup', () => drawing=false);
+canvas.addEventListener('mouseleave', () => drawing=false);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; [lastX,lastY]=getPos(e); }, {passive:false});
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!drawing) return;
+  const [x,y] = getPos(e);
+  ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y);
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary') || '#000';
+  ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke();
+  [lastX,lastY] = [x,y];
+}, {passive:false});
+canvas.addEventListener('touchend', () => drawing=false);
+
+function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); }
+function exportSig() { showToast('Signature enregistrée'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function submitForm() {
+  const nom = document.getElementById('nom').value.trim();
+  const prenom = document.getElementById('prenom').value.trim();
+  if (!nom || !prenom) { showToast('Veuillez remplir le nom et prénom du patient'); return; }
+  showToast('Fiche enregistrée — ' + document.getElementById('numIntervention').textContent);
+}
+</script>
