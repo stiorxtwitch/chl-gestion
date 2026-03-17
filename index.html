@@ -1,284 +1,168 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediFuture • Fiche de Prise en Charge</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <style>
-    body { font-family: 'Inter', system-ui, sans-serif; }
-    .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); }
-    .mannequin-container { position: relative; width: 320px; margin: 0 auto; }
-    .mannequin { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
-    .injury-dot { position: absolute; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; transition: all 0.3s; }
-    .header-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion Patients - Futur</title>
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #e0f7fa;
+  margin: 0;
+}
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+h1 {
+  text-align: center;
+  color: #00e5ff;
+}
+.section {
+  background: rgba(255,255,255,0.05);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 0 20px rgba(0,229,255,0.2);
+}
+label { display:block; margin-top:10px; }
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: none;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+td, th {
+  border: 1px solid #00e5ff;
+  padding: 5px;
+  text-align: center;
+}
+.canvas-container {
+  border: 2px dashed #00e5ff;
+  height: 300px;
+  position: relative;
+}
+canvas { width:100%; height:100%; }
+button {
+  background: #00e5ff;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-200 min-h-screen">
+<body>
+<div class="container">
+<h1>🩺 Gestion des Patients</h1>
 
-  <div class="max-w-6xl mx-auto p-6">
-    <!-- HEADER -->
-    <div class="header-gradient rounded-3xl p-8 mb-8 shadow-2xl flex items-center justify-between">
-      <div>
-        <h1 class="text-5xl font-bold tracking-tighter text-white">MEDIFUTURE</h1>
-        <p class="text-emerald-400 text-xl">Fiche de Prise en Charge • Intervention #<span id="interventionNum">AUTO-2026-0317-001</span></p>
-      </div>
-      <button onclick="generatePDF()" class="bg-emerald-600 hover:bg-emerald-500 px-8 py-4 rounded-2xl flex items-center gap-3 text-lg font-semibold">
-        <i class="fas fa-file-pdf"></i> Exporter PDF
-      </button>
-    </div>
+<div class="section">
+<h2>Information</h2>
+<label>N° Intervention</label>
+<input id="intervention" readonly>
+<label>Nom</label><input>
+<label>Prénom</label><input>
+<label>Date de naissance</label><input type="date">
+<label>Sexe</label>
+<input type="checkbox"> M <input type="checkbox"> F
+<label>Adresse</label><input>
+<label>Téléphone</label><input>
+</div>
 
-    <form id="patientForm" class="space-y-12">
+<div class="section">
+<h2>Prise en charge</h2>
+<label><input type="checkbox"> Par Equipe</label>
+<label><input type="checkbox"> Ambulance</label>
+<label><input type="checkbox"> SMUR</label>
+<label><input type="checkbox"> Hôpital</label>
+<label><input type="checkbox"> Refus de soins</label>
+<textarea placeholder="Autre soins..."></textarea>
+</div>
 
-      <!-- SECTION 1: INFORMATIONS PATIENT -->
-      <div class="glass rounded-3xl p-8 border border-slate-700">
-        <h2 class="text-3xl font-semibold mb-6 flex items-center gap-3"><i class="fas fa-user-md text-emerald-400"></i> Informations Patient</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-sm text-slate-400 mb-1">Nom</label>
-            <input type="text" id="nom" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-emerald-500 text-lg">
-          </div>
-          <div>
-            <label class="block text-sm text-slate-400 mb-1">Prénom</label>
-            <input type="text" id="prenom" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-emerald-500 text-lg">
-          </div>
-          <div>
-            <label class="block text-sm text-slate-400 mb-1">Date de Naissance</label>
-            <input type="date" id="dateNaissance" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-emerald-500 text-lg">
-          </div>
-          <div>
-            <label class="block text-sm text-slate-400 mb-2">Sexe</label>
-            <div class="flex gap-8">
-              <label class="flex items-center gap-3 text-lg"><input type="radio" name="sexe" value="M"> <span class="text-blue-400">♂ Masculin</span></label>
-              <label class="flex items-center gap-3 text-lg"><input type="radio" name="sexe" value="F"> <span class="text-pink-400">♀ Féminin</span></label>
-            </div>
-          </div>
-          <div class="md:col-span-2">
-            <label class="block text-sm text-slate-400 mb-1">Adresse</label>
-            <input type="text" id="adresse" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-emerald-500 text-lg">
-          </div>
-          <div>
-            <label class="block text-sm text-slate-400 mb-1">Téléphone</label>
-            <input type="tel" id="tel" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 focus:outline-none focus:border-emerald-500 text-lg">
-          </div>
-        </div>
-      </div>
+<div class="section">
+<h2>Blessures</h2>
+<table>
+<tr><th></th><th>Tête</th><th>Thorax</th><th>Abdomen</th></tr>
+<tr><td>Abrasion</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+<tr><td>Lacération</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+</table>
+<div class="canvas-container">
+<canvas id="bodyCanvas"></canvas>
+</div>
+</div>
 
-      <!-- SECTION 2: PRISE EN CHARGE -->
-      <div class="glass rounded-3xl p-8 border border-slate-700">
-        <h2 class="text-3xl font-semibold mb-6 flex items-center gap-3"><i class="fas fa-ambulance text-red-400"></i> Mode de Prise en Charge</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="space-y-6">
-            <label class="flex items-center gap-4 text-lg cursor-pointer">
-              <input type="checkbox" id="equipe" class="w-6 h-6 accent-emerald-500">
-              <span>Par Équipe</span>
-            </label>
-            <div id="equipeFields" class="hidden pl-10 space-y-4">
-              <input type="text" placeholder="Nom des soignants" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4">
-              <input type="datetime-local" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4">
-            </div>
+<div class="section">
+<h2>Score Glasgow</h2>
+<div class="grid">
+<input type="number" id="yeux" min="1" max="4" placeholder="Yeux">
+<input type="number" id="verbal" min="1" max="5" placeholder="Verbal">
+<input type="number" id="moteur" min="1" max="6" placeholder="Moteur">
+</div>
+<h3>Total: <span id="total">0</span> / 15</h3>
+</div>
 
-            <!-- Répéter le même pattern pour Ambulance, SMUR, Hôpital, Refus, Retour à la vie active... -->
-            <!-- Pour gagner de la place, je te montre le pattern une fois, tu peux le dupliquer -->
-          </div>
-        </div>
-        <div class="mt-8">
-          <label class="block text-sm text-slate-400 mb-2">Autre soin / Remarque</label>
-          <textarea id="autreSoin" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-3xl px-6 py-5 focus:outline-none focus:border-emerald-500"></textarea>
-        </div>
-      </div>
+<div class="section">
+<h2>Signature</h2>
+<div class="canvas-container">
+<canvas id="signature"></canvas>
+</div>
+<button onclick="clearSignature()">Effacer</button>
+</div>
 
-      <!-- SECTION 3: BLESSURES + MANNEQUIN INTERACTIF -->
-      <div class="glass rounded-3xl p-8 border border-slate-700">
-        <h2 class="text-3xl font-semibold mb-6 flex items-center gap-3"><i class="fas fa-skull-crossbones text-orange-400"></i> Blessures et Douleur</h2>
-        
-        <div class="flex flex-col lg:flex-row gap-10">
-          <!-- MANNEQUIN -->
-          <div class="mannequin-container">
-            <img id="mannequinImg" src="https://i.imgur.com/5pK8v3L.png" alt="Mannequin anatomique" class="mannequin"> <!-- Image silhouette médicale simple - tu peux remplacer par une meilleure -->
-            <div id="injuryOverlay" class="absolute top-0 left-0 w-full h-full pointer-events-none"></div>
-          </div>
+</div>
 
-          <!-- Tableau des blessures -->
-          <div class="flex-1">
-            <table class="w-full text-sm">
-              <thead>
-                <tr class="border-b border-slate-700">
-                  <th class="py-4 text-left">Blessure</th>
-                  <th class="py-4">Tête</th>
-                  <th class="py-4">Thorax</th>
-                  <th class="py-4">Abdomen</th>
-                  <th class="py-4">MS Droit</th>
-                  <th class="py-4">MS Gauche</th>
-                  <th class="py-4">MI Droit</th>
-                  <th class="py-4">MI Gauche</th>
-                </tr>
-              </thead>
-              <tbody id="blessureTable" class="divide-y divide-slate-700">
-                <!-- Rempli dynamiquement par JS -->
-              </tbody>
-            </table>
+<script>
+// Générer numéro intervention
+document.getElementById('intervention').value = 'INT-' + Date.now();
 
-            <div class="mt-6">
-              <label class="block text-sm text-slate-400 mb-2">Autre blessure / Précision</label>
-              <textarea id="autreBlessure" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-3xl px-6 py-5"></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
+// Calcul Glasgow
+function calcGlasgow() {
+  let y = +document.getElementById('yeux').value || 0;
+  let v = +document.getElementById('verbal').value || 0;
+  let m = +document.getElementById('moteur').value || 0;
+  document.getElementById('total').innerText = y + v + m;
+}
 
-      <!-- SECTION 4: GLASGOW -->
-      <div class="glass rounded-3xl p-8 border border-slate-700">
-        <h2 class="text-3xl font-semibold mb-6">Score de Glasgow</h2>
-        <div class="grid grid-cols-3 gap-8">
-          <div>
-            <label class="block mb-3 text-lg">Ouverture des Yeux (1-4)</label>
-            <select id="yeux" onchange="calcGlasgow()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-2xl">
-              <option value="0">Choisir</option>
-              <option value="1">1 - Aucune</option>
-              <option value="2">2 - À la douleur</option>
-              <option value="3">3 - À la voix</option>
-              <option value="4">4 - Spontanée</option>
-            </select>
-          </div>
-          <div>
-            <label class="block mb-3 text-lg">Réponse Verbale (1-5)</label>
-            <select id="verbale" onchange="calcGlasgow()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-2xl">
-              <option value="0">Choisir</option>
-              <option value="1">1 - Aucune</option>
-              <option value="2">2 - Sons incompréhensibles</option>
-              <option value="3">3 - Mots inappropriés</option>
-              <option value="4">4 - Confuse</option>
-              <option value="5">5 - Orientée</option>
-            </select>
-          </div>
-          <div>
-            <label class="block mb-3 text-lg">Réponse Motrice (1-6)</label>
-            <select id="motrice" onchange="calcGlasgow()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-2xl">
-              <option value="0">Choisir</option>
-              <option value="1">1 - Aucune</option>
-              <option value="2">2 - Extension (décérébration)</option>
-              <option value="3">3 - Flexion anormale</option>
-              <option value="4">4 - Retrait à la douleur</option>
-              <option value="5">5 - Localise la douleur</option>
-              <option value="6">6 - Obéit aux ordres</option>
-            </select>
-          </div>
-        </div>
-        <div class="mt-8 text-center">
-          <p class="text-6xl font-bold text-emerald-400" id="glasgowTotal">15</p>
-          <p class="text-sm text-slate-400">Score Glasgow / 15</p>
-        </div>
-      </div>
+document.querySelectorAll('#yeux,#verbal,#moteur').forEach(i => i.addEventListener('input', calcGlasgow));
 
-      <!-- SECTIONS RESTANTES (Respiration, Arythmie, Paramètres, Matériel, Fin, Signature) -->
-      <!-- Je les ai simplifiées ici pour que ça rentre, mais elles sont toutes fonctionnelles -->
-      <!-- Tu peux les déplier de la même manière que ci-dessus avec des inputs, checkboxes, etc. -->
+// Signature dessin
+const canvas = document.getElementById('signature');
+const ctx = canvas.getContext('2d');
+let drawing = false;
 
-      <!-- Signature -->
-      <div class="glass rounded-3xl p-8 border border-slate-700">
-        <h2 class="text-3xl font-semibold mb-6">Signature du Soignant / Rédacteur</h2>
-        <canvas id="signatureCanvas" width="600" height="200" class="bg-white border-2 border-dashed border-slate-500 rounded-3xl w-full cursor-crosshair"></canvas>
-        <div class="flex gap-4 mt-4">
-          <button type="button" onclick="clearSignature()" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 rounded-2xl">Effacer</button>
-          <button type="button" onclick="saveSignature()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl">Valider Signature</button>
-        </div>
-        <img id="savedSignature" class="mt-4 hidden max-h-48 border border-slate-700 rounded-2xl">
-      </div>
+canvas.addEventListener('mousedown', () => drawing = true);
+canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mousemove', draw);
 
-      <div class="text-center pt-8">
-        <button type="button" onclick="submitForm()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-2xl font-bold px-16 py-6 rounded-3xl shadow-xl">
-          ✅ Valider la Fiche de Prise en Charge
-        </button>
-      </div>
-    </form>
-  </div>
+function draw(e) {
+  if (!drawing) return;
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#00e5ff';
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
+}
 
-  <script>
-    // Numéro d'intervention auto
-    document.getElementById('interventionNum').textContent = 'AUTO-' + new Date().getFullYear() + '-' + String(new Date().getMonth()+1).padStart(2,'0') + String(new Date().getDate()).padStart(2,'0') + '-001';
+function clearSignature() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+</script>
 
-    // Tableau blessures
-    const blessures = ["Abrasion", "Lacération", "Trauma", "Douleur Aiguë", "Contusion", "Plaie Balistique", "Brûlure", "Fracture", "Hémorragie"];
-    const zones = ["tete","thorax","abdomen","msd","msg","mid","mig"];
-
-    let tableHTML = '';
-    blessures.forEach(b => {
-      tableHTML += `<tr class="hover:bg-slate-800/50 transition-colors">`;
-      tableHTML += `<td class="py-4 font-medium">${b}</td>`;
-      zones.forEach(z => {
-        tableHTML += `<td class="py-4 text-center"><input type="checkbox" class="w-5 h-5 accent-orange-500" onchange="addInjury('${b}', '${z}')"></td>`;
-      });
-      tableHTML += `</tr>`;
-    });
-    document.getElementById('blessureTable').innerHTML = tableHTML;
-
-    // Mannequin interactif simple (points cliquables)
-    const colors = ['#ef4444','#f59e0b','#eab308','#22c55e','#06b67f'];
-    let injuryCount = 0;
-
-    function addInjury(type, zone) {
-      injuryCount++;
-      const overlay = document.getElementById('injuryOverlay');
-      const dot = document.createElement('div');
-      dot.className = 'injury-dot';
-      dot.style.backgroundColor = colors[injuryCount % colors.length];
-      dot.style.left = (20 + Math.random()*60) + '%';
-      dot.style.top = (15 + Math.random()*70) + '%';
-      dot.title = type + ' - ' + zone;
-      overlay.appendChild(dot);
-    }
-
-    // Glasgow auto
-    function calcGlasgow() {
-      const y = parseInt(document.getElementById('yeux').value) || 0;
-      const v = parseInt(document.getElementById('verbale').value) || 0;
-      const m = parseInt(document.getElementById('motrice').value) || 0;
-      document.getElementById('glasgowTotal').textContent = y + v + m;
-    }
-
-    // Signature canvas
-    const canvas = document.getElementById('signatureCanvas');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-
-    canvas.addEventListener('mousedown', () => drawing = true);
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mousemove', draw);
-
-    function draw(e) {
-      if (!drawing) return;
-      ctx.lineWidth = 4;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = '#111827';
-      ctx.lineTo(e.offsetX, e.offsetY);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(e.offsetX, e.offsetY);
-    }
-
-    function clearSignature() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function saveSignature() {
-      const img = document.getElementById('savedSignature');
-      img.src = canvas.toDataURL('image/png');
-      img.classList.remove('hidden');
-    }
-
-    // Export PDF (utilise window.print pour l'instant - tu peux ajouter jsPDF après)
-    function generatePDF() {
-      alert("Export PDF en cours... (dans une vraie version on utiliserait jsPDF ou html2pdf)");
-      window.print();
-    }
-
-    function submitForm() {
-      alert("✅ Fiche de prise en charge enregistrée avec succès !\n\n(Tu peux maintenant l'exporter en PDF)");
-    }
-
-    // Tailwind script déjà chargé via CDN
-  </script>
 </body>
 </html>
+
