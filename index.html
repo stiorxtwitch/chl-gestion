@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fiche de prise en charge — CH Liège</title>
+
+    <!-- Bibliothèques pour générer le PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         :root {
             --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -22,7 +27,7 @@
             --color-text-info: #1e40af;
             --color-text-warning: #854d0e;
         }
-        
+       
         *{box-sizing:border-box;margin:0;padding:0}
         body{font-family:var(--font-sans);background:#f1f5f9;padding:20px 0}
         .wrap{padding:1.5rem 1rem;max-width:960px;margin:0 auto;background:var(--color-background-primary);border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,0.08)}
@@ -32,7 +37,6 @@
         .page-title{font-size:20px;font-weight:500;color:var(--color-text-primary)}
         .page-sub{font-size:13px;color:var(--color-text-secondary);margin-top:2px}
         .intervention-badge{margin-left:auto;background:var(--color-background-info);color:var(--color-text-info);font-size:12px;font-weight:500;padding:6px 14px;border-radius:var(--border-radius-md);font-family:var(--font-mono)}
-
         .section{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
         .section-label{font-size:11px;font-weight:500;color:var(--color-text-info);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
         .section-label::after{content:'';flex:1;height:0.5px;background:var(--color-border-tertiary)}
@@ -55,8 +59,6 @@
         .check-row.checked .check-box svg{display:block}
         .check-label{font-size:13px;color:var(--color-text-primary);flex:1}
         .sub-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-
-        /* Blessures table */
         .inj-table{width:100%;border-collapse:collapse;font-size:11px}
         .inj-table th{padding:6px 8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);font-weight:500;text-align:center}
         .inj-table td{padding:4px 6px;border:0.5px solid var(--color-border-tertiary);text-align:center;vertical-align:middle}
@@ -66,16 +68,12 @@
         .cell-check.on{border-color:transparent}
         .cell-check.on svg{display:block}
         .cell-check svg{width:12px;height:12px;fill:none;stroke-width:3;display:none}
-
-        /* Mannequin */
         .manni-wrap{display:flex;justify-content:center;margin:1rem 0}
         .manni-svg{overflow:visible}
         .zone-overlay{transition:all .2s;cursor:default}
         .legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:.75rem}
         .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
         .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-
-        /* Glasgow */
         .gcs-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
         .gcs-label{font-size:12px;color:var(--color-text-secondary);width:160px;flex-shrink:0}
         .gcs-btns{display:flex;gap:4px;flex:1}
@@ -84,21 +82,15 @@
         .gcs-btn.on{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info);font-weight:500}
         .gcs-total{font-family:var(--font-mono);font-size:22px;font-weight:500;text-align:center;padding:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
         .gcs-score-label{font-size:11px;color:var(--color-text-secondary);text-align:center;margin-top:4px}
-
-        /* Parametres */
         .param-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
         .param-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px}
         .param-card label{font-size:11px;color:var(--color-text-secondary);display:block;margin-bottom:4px}
         .param-input-row{display:flex;align-items:center;gap:4px}
         .param-unit{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
-
-        /* Matériel */
         .mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
         .mat-item{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)}
         .mat-item input[type=number]{width:50px;text-align:center;padding:4px 6px}
         .mat-item span{font-size:12px;color:var(--color-text-secondary);flex:1;line-height:1.3}
-
-        /* Signature */
         .sig-canvas{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);cursor:crosshair;width:100%;height:120px;touch-action:none}
         .sig-actions{display:flex;gap:6px;margin-top:6px}
         .btn-sm{padding:6px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;font-size:12px;color:var(--color-text-primary);font-family:var(--font-sans);transition:all .15s}
@@ -113,9 +105,7 @@
     </style>
 </head>
 <body>
-
 <div class="wrap">
-
 <div class="page-header">
   <div class="header-icon">
     <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
@@ -240,12 +230,13 @@
 </div>
 
 <button class="btn-submit" onclick="submitForm()">Enregistrer la fiche de prise en charge</button>
-
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
+// ==================== TON CODE ORIGINAL (inchangé) ====================
+
 const genNum = () => {
   const d = new Date();
   const p = v => String(v).padStart(2,'0');
@@ -267,7 +258,7 @@ function setGender(btn, v) {
   btn.classList.add('active');
 }
 
-// ── PRISE EN CHARGE ──
+// PRISE EN CHARGE
 const pcTypes = [
   {id:'equipe', label:'Par Équipe'},
   {id:'ambulance', label:'Par Ambulance'},
@@ -300,7 +291,7 @@ function toggleCheck(el) {
   el.classList.toggle('checked');
 }
 
-// ── BLESSURES TABLE ──
+// BLESSURES TABLE
 const injCols = ['Tête','Thorax','Abdomen','MS Droit','MS Gauche','MI Droit','MI Gauche'];
 const injRows = ['Abrasion','Lacération','Traumatisme','Douleur aiguë','Contusion','Plaie balistique','Brûlure','Fracture','Luxation','Œdème'];
 const injColors = {
@@ -316,6 +307,7 @@ let thHtml = '<tr><th></th>';
 injCols.forEach(c => thHtml += `<th>${c}</th>`);
 thHtml += '</tr>';
 tbl.innerHTML = thHtml;
+
 injRows.forEach(r => {
   const tr = document.createElement('tr');
   let html = `<td>${r}</td>`;
@@ -345,15 +337,15 @@ function toggleCell(row, col) {
   updateMannequin();
 }
 
-// ── MANNEQUIN ──
+// MANNEQUIN
 const zoneMap = {
-  'Tête':       [{type:'ellipse',cx:70,cy:22,rx:16,ry:18}],
-  'Thorax':     [{type:'rect',x:50,y:46,w:40,h:42,r:4}],
-  'Abdomen':    [{type:'rect',x:50,y:92,w:40,h:30,r:4}],
-  'MS Droit':   [{type:'rect',x:24,y:48,w:22,h:60,r:4}],
-  'MS Gauche':  [{type:'rect',x:94,y:48,w:22,h:60,r:4}],
-  'MI Droit':   [{type:'rect',x:52,y:128,w:18,h:80,r:4}],
-  'MI Gauche':  [{type:'rect',x:70,y:128,w:18,h:80,r:4}],
+  'Tête': [{type:'ellipse',cx:70,cy:22,rx:16,ry:18}],
+  'Thorax': [{type:'rect',x:50,y:46,w:40,h:42,r:4}],
+  'Abdomen': [{type:'rect',x:50,y:92,w:40,h:30,r:4}],
+  'MS Droit': [{type:'rect',x:24,y:48,w:22,h:60,r:4}],
+  'MS Gauche': [{type:'rect',x:94,y:48,w:22,h:60,r:4}],
+  'MI Droit': [{type:'rect',x:52,y:128,w:18,h:80,r:4}],
+  'MI Gauche': [{type:'rect',x:70,y:128,w:18,h:80,r:4}],
 };
 
 function drawMannequin() {
@@ -379,7 +371,6 @@ function updateMannequin() {
   const svg = document.getElementById('manni');
   const legend = document.getElementById('manni-legend');
   const legendItems = {};
-
   Object.entries(zoneMap).forEach(([zone, shapes]) => {
     const injuries = Object.entries(injState[zone] || {}).filter(([,v]) => v).map(([r]) => r);
     if (!injuries.length) return;
@@ -411,7 +402,6 @@ function updateMannequin() {
       }
     });
   });
-
   legend.innerHTML = Object.entries(legendItems).map(([inj, col]) =>
     `<div class="legend-item"><div class="legend-dot" style="background:${col}"></div>${inj}</div>`
   ).join('');
@@ -433,10 +423,9 @@ function appendShape(svg, s, fill, stroke, sw) {
   el.setAttribute('stroke-width', sw);
   svg.appendChild(el);
 }
-
 drawMannequin();
 
-// ── GLASGOW ──
+// GLASGOW
 const gcsData = [
   {id:'yeux', label:'Ouverture des yeux', max:4, labels:['1 — Nulle','2 — À la douleur','3 — Au bruit','4 — Spontanée']},
   {id:'verbale', label:'Réponse verbale', max:5, labels:['1 — Nulle','2 — Sons incompréhensibles','3 — Mots inappropriés','4 — Confuse','5 — Orientée']},
@@ -452,6 +441,7 @@ gcsData.forEach(g => {
   row.innerHTML = `<div class="gcs-label">${g.label}</div><div class="gcs-btns">${btns}</div>`;
   gcsContainer.appendChild(row);
 });
+
 function setGcs(id, val, btn) {
   gcsVals[id] = val;
   btn.closest('.gcs-btns').querySelectorAll('.gcs-btn').forEach(b => b.classList.remove('on'));
@@ -463,7 +453,7 @@ function setGcs(id, val, btn) {
   document.getElementById('gcsInterp').textContent = filled === 3 ? interp : 'Sélection en cours';
 }
 
-// ── RESPIRATION ──
+// RESPIRATION
 const respItems = ['Tachypnée (> 25 cycles/min)','Eupnée (12–20 cycles/min)','Bradypnée (< 10 cycles/min)'];
 const respContainer = document.getElementById('respRows');
 let selResp = '';
@@ -479,7 +469,7 @@ respItems.forEach(r => {
   respContainer.appendChild(row);
 });
 
-// ── ARYTHMIE ──
+// ARYTHMIE
 const arytItems = ['Asystolie','Fibrillation auriculaire','Fibrillation ventriculaire','Infarctus'];
 const arytContainer = document.getElementById('arytRows');
 arytItems.forEach(r => {
@@ -490,7 +480,7 @@ arytItems.forEach(r => {
   arytContainer.appendChild(row);
 });
 
-// ── PARAMÈTRES ──
+// PARAMÈTRES
 const params = [
   {id:'ta_sys', label:'Tension artérielle', type:'ta'},
   {id:'pls', label:'Pouls', unit:'BPM'},
@@ -513,7 +503,7 @@ params.forEach(p => {
   pg.appendChild(card);
 });
 
-// ── MATÉRIEL ──
+// MATÉRIEL
 const mats = [
   'Compresse 7,5×7,5','Bande gaze','Pansement hémostatique','LP','Cédium®','Poche de sang',
   'Kit réanimation','Kit chirurgical','Injecteur épinéphrine','Injecteur morphine',
@@ -529,15 +519,17 @@ mats.forEach(m => {
   mg.appendChild(item);
 });
 
-// ── SIGNATURE ──
+// SIGNATURE
 const canvas = document.getElementById('sigCanvas');
 const ctx = canvas.getContext('2d');
 let drawing = false, lastX = 0, lastY = 0;
+
 function getPos(e) {
   const r = canvas.getBoundingClientRect();
   const src = e.touches ? e.touches[0] : e;
   return [(src.clientX - r.left) * (canvas.width / r.width), (src.clientY - r.top) * (canvas.height / r.height)];
 }
+
 canvas.addEventListener('mousedown', e => { drawing=true; [lastX,lastY]=getPos(e); });
 canvas.addEventListener('mousemove', e => {
   if (!drawing) return;
@@ -570,14 +562,62 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-function submitForm() {
-  const nom = document.getElementById('nom').value.trim();
-  const prenom = document.getElementById('prenom').value.trim();
-  if (!nom || !prenom) { 
-    showToast('Veuillez remplir le nom et prénom du patient'); 
-    return; 
-  }
-  showToast('✅ Fiche enregistrée — ' + document.getElementById('numIntervention').textContent);
+// ==================== NOUVELLE FONCTION submitForm() AVEC PDF ====================
+async function submitForm() {
+    const nom = document.getElementById('nom').value.trim();
+    const prenom = document.getElementById('prenom').value.trim();
+    if (!nom || !prenom) {
+        showToast('Veuillez remplir le nom et prénom du patient');
+        return;
+    }
+
+    const numInt = document.getElementById('numIntervention').textContent;
+    const toast = document.getElementById('toast');
+
+    toast.textContent = 'Conversion en PDF en cours...';
+    toast.classList.add('show');
+
+    try {
+        const element = document.querySelector('.wrap');
+
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            allowTaint: true,
+            backgroundColor: '#ffffff'
+        });
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height);
+        const finalWidth = canvas.width * ratio;
+        const finalHeight = canvas.height * ratio;
+
+        const x = (pdfWidth - finalWidth) / 2;
+        const y = (pdfHeight - finalHeight) / 2 > 0 ? (pdfHeight - finalHeight) / 2 : 5;
+
+        pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
+        pdf.save(`Fiche_Prise_en_Charge_${numInt}.pdf`);
+
+        showToast(`✅ PDF généré avec succès — ${numInt}`);
+    } catch (err) {
+        console.error(err);
+        showToast('❌ Erreur lors de la génération du PDF');
+    } finally {
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
 }
 
 // Initialisation finale
