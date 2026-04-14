@@ -4,624 +4,550 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fiche de prise en charge — CH Liège</title>
-
-    <!-- Bibliothèques pour générer le PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
         :root {
-            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            --border-radius-md: 8px;
-            --border-radius-lg: 12px;
-            --color-background-primary: #ffffff;
-            --color-background-secondary: #f8f9fa;
-            --color-background-info: #dbeafe;
-            --color-background-warning: #fef3c7;
-            --color-border-tertiary: #e5e7eb;
-            --color-border-secondary: #d1d5db;
-            --color-border-info: #3b82f6;
-            --color-text-primary: #111827;
-            --color-text-secondary: #64748b;
-            --color-text-info: #1e40af;
-            --color-text-warning: #854d0e;
+            --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            --blue-50:#eff6ff;--blue-100:#dbeafe;--blue-200:#bfdbfe;--blue-400:#60a5fa;
+            --blue-500:#3b82f6;--blue-600:#2563eb;--blue-700:#1d4ed8;--blue-800:#1e40af;
+            --amber-100:#fef3c7;--amber-800:#92400e;
+            --red-50:#fef2f2;--red-100:#fee2e2;--red-600:#dc2626;--red-700:#b91c1c;
+            --green-100:#dcfce7;--green-700:#15803d;
+            --slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-300:#cbd5e1;
+            --slate-400:#94a3b8;--slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;
+            --slate-800:#1e293b;--slate-900:#0f172a;
+            --radius-sm:6px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;
         }
-       
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:var(--font-sans);background:#f1f5f9;padding:20px 0}
-        .wrap{padding:1.5rem 1rem;max-width:960px;margin:0 auto;background:var(--color-background-primary);border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,0.08)}
-        .page-header{display:flex;align-items:center;gap:14px;margin-bottom:2rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
-        .header-icon{width:42px;height:42px;border-radius:var(--border-radius-md);background:var(--color-background-info);display:flex;align-items:center;justify-content:center}
-        .header-icon svg{width:22px;height:22px;stroke:var(--color-text-info);fill:none;stroke-width:2}
-        .page-title{font-size:20px;font-weight:500;color:var(--color-text-primary)}
-        .page-sub{font-size:13px;color:var(--color-text-secondary);margin-top:2px}
-        .intervention-badge{margin-left:auto;background:var(--color-background-info);color:var(--color-text-info);font-size:12px;font-weight:500;padding:6px 14px;border-radius:var(--border-radius-md);font-family:var(--font-mono)}
-        .section{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
-        .section-label{font-size:11px;font-weight:500;color:var(--color-text-info);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
-        .section-label::after{content:'';flex:1;height:0.5px;background:var(--color-border-tertiary)}
-        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-        .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-        .field{display:flex;flex-direction:column;gap:4px}
-        .field label{font-size:12px;color:var(--color-text-secondary);font-weight:500}
-        input[type=text],input[type=date],input[type=tel],input[type=number],input[type=time],select,textarea{width:100%;font-size:13px;font-family:var(--font-sans);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:7px 10px;color:var(--color-text-primary);outline:none;transition:border-color .15s}
-        input:focus,select:focus,textarea:focus{border-color:var(--color-border-info)}
-        textarea{resize:vertical;min-height:70px}
-        .radio-row{display:flex;gap:6px;margin-bottom:4px}
-        .r-btn{flex:1;padding:7px 8px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);font-size:12px;cursor:pointer;text-align:center;color:var(--color-text-secondary);transition:all .15s;font-family:var(--font-sans)}
-        .r-btn.active{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info);font-weight:500}
-        .check-row{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);margin-bottom:6px;transition:all .15s;cursor:pointer}
-        .check-row:hover{border-color:var(--color-border-secondary)}
-        .check-row.checked{background:var(--color-background-info);border-color:var(--color-border-info)}
-        .check-box{width:16px;height:16px;border:1.5px solid var(--color-border-secondary);border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
-        .check-row.checked .check-box{background:var(--color-text-info);border-color:var(--color-text-info)}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:var(--font-sans);background:#e8edf5;padding:24px 16px;min-height:100vh}
+        .wrap{max-width:980px;margin:0 auto}
+        .page-header{display:flex;align-items:center;gap:16px;background:var(--slate-900);color:white;padding:20px 24px;border-radius:var(--radius-xl) var(--radius-xl) 0 0}
+        .header-icon{width:44px;height:44px;border-radius:var(--radius-md);background:rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .header-icon svg{width:22px;height:22px;stroke:#60a5fa;fill:none;stroke-width:2}
+        .page-title{font-size:18px;font-weight:600;color:white;letter-spacing:-0.02em}
+        .page-sub{font-size:12px;color:var(--slate-400);margin-top:3px}
+        .intervention-badge{margin-left:auto;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#93c5fd;font-size:12px;font-weight:500;padding:6px 14px;border-radius:var(--radius-md);font-family:var(--font-mono);white-space:nowrap}
+        .form-body{background:white;border-radius:0 0 var(--radius-xl) var(--radius-xl);border:1px solid var(--slate-200);border-top:none;overflow:hidden;padding-bottom:24px}
+        .section{padding:20px 24px;border-bottom:1px solid var(--slate-100)}
+        .section:last-child{border-bottom:none}
+        .section-label{font-size:10px;font-weight:600;color:var(--blue-700);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+        .section-label::before{content:'';width:3px;height:14px;background:var(--blue-500);border-radius:2px;flex-shrink:0}
+        .section-label::after{content:'';flex:1;height:1px;background:var(--slate-100)}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+        .field{display:flex;flex-direction:column;gap:5px}
+        .field label{font-size:11px;color:var(--slate-500);font-weight:500;letter-spacing:.01em}
+        input[type=text],input[type=date],input[type=tel],input[type=number],input[type=time],input[type=datetime-local],select,textarea{width:100%;font-size:13px;font-family:var(--font-sans);background:var(--slate-50);border:1px solid var(--slate-200);border-radius:var(--radius-md);padding:8px 11px;color:var(--slate-800);outline:none;transition:border-color .15s,box-shadow .15s}
+        input:focus,select:focus,textarea:focus{border-color:var(--blue-400);box-shadow:0 0 0 3px var(--blue-100)}
+        textarea{resize:vertical;min-height:72px;line-height:1.5}
+        .radio-row{display:flex;gap:6px;margin-top:4px}
+        .r-btn{flex:1;padding:8px 6px;border:1px solid var(--slate-200);border-radius:var(--radius-md);background:var(--slate-50);font-size:12px;cursor:pointer;text-align:center;color:var(--slate-500);transition:all .15s;font-family:var(--font-sans);font-weight:500}
+        .r-btn:hover{border-color:var(--blue-400);color:var(--blue-700)}
+        .r-btn.active{background:var(--blue-50);border-color:var(--blue-400);color:var(--blue-700);font-weight:600}
+        .check-row{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid var(--slate-200);border-radius:var(--radius-md);background:var(--slate-50);margin-bottom:6px;transition:all .15s;cursor:pointer;user-select:none}
+        .check-row:hover{border-color:var(--slate-300);background:white}
+        .check-row.checked{background:var(--blue-50);border-color:var(--blue-400)}
+        .check-box{width:17px;height:17px;border:1.5px solid var(--slate-300);border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+        .check-row.checked .check-box{background:var(--blue-600);border-color:var(--blue-600)}
         .check-box svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:3;display:none}
         .check-row.checked .check-box svg{display:block}
-        .check-label{font-size:13px;color:var(--color-text-primary);flex:1}
-        .sub-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+        .check-label{font-size:13px;color:var(--slate-700);flex:1;line-height:1.4;font-weight:400}
+        /* PRISE EN CHARGE */
+        .pc-row{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid var(--slate-200);border-radius:var(--radius-md);background:var(--slate-50);margin-bottom:6px;transition:all .15s;cursor:pointer;user-select:none}
+        .pc-row:hover{border-color:var(--slate-300);background:white}
+        .pc-row.checked{background:var(--blue-50);border-color:var(--blue-400)}
+        .pc-row .check-box{margin-top:4px}
+        .pc-content{flex:1;display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+        .pc-label{font-size:13px;font-weight:500;color:var(--slate-700);min-width:120px}
+        .pc-fields{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .pc-dt-group{display:flex;align-items:center;gap:4px}
+        .pc-dt-label{font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 7px;border-radius:4px;white-space:nowrap}
+        .pc-dt-label.in-label{background:var(--green-100);color:var(--green-700)}
+        .pc-dt-label.out-label{background:var(--red-100);color:var(--red-700)}
+        .pc-dt-input{font-size:11px!important;padding:5px 7px!important;width:auto!important;min-width:160px}
+        .pc-name-input{font-size:12px!important;padding:5px 8px!important;min-width:160px}
+        /* INJURY TABLE */
         .inj-table{width:100%;border-collapse:collapse;font-size:11px}
-        .inj-table th{padding:6px 8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);font-weight:500;text-align:center}
-        .inj-table td{padding:4px 6px;border:0.5px solid var(--color-border-tertiary);text-align:center;vertical-align:middle}
-        .inj-table td:first-child{text-align:left;font-size:11px;color:var(--color-text-secondary);font-weight:500;padding-left:8px;background:var(--color-background-secondary)}
-        .cell-check{width:22px;height:22px;border:1.5px solid var(--color-border-secondary);border-radius:4px;cursor:pointer;margin:auto;display:flex;align-items:center;justify-content:center;transition:all .15s}
-        .cell-check:hover{border-color:var(--color-border-info)}
+        .inj-table th{padding:7px 8px;background:var(--slate-800);color:white;border:1px solid var(--slate-700);font-weight:500;text-align:center;font-size:11px;letter-spacing:.02em}
+        .inj-table th:first-child{background:var(--slate-900);text-align:left}
+        .inj-table td{padding:4px 6px;border:1px solid var(--slate-200);text-align:center;vertical-align:middle}
+        .inj-table td:first-child{text-align:left;font-size:11px;color:var(--slate-600);font-weight:500;padding-left:10px;background:var(--slate-50)}
+        .cell-check{width:22px;height:22px;border:1.5px solid var(--slate-300);border-radius:4px;cursor:pointer;margin:auto;display:flex;align-items:center;justify-content:center;transition:all .15s}
+        .cell-check:hover{border-color:var(--blue-400)}
         .cell-check.on{border-color:transparent}
         .cell-check.on svg{display:block}
         .cell-check svg{width:12px;height:12px;fill:none;stroke-width:3;display:none}
-        .manni-wrap{display:flex;justify-content:center;margin:1rem 0}
-        .manni-svg{overflow:visible}
-        .zone-overlay{transition:all .2s;cursor:default}
-        .legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:.75rem}
-        .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
-        .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-        .gcs-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-        .gcs-label{font-size:12px;color:var(--color-text-secondary);width:160px;flex-shrink:0}
+        /* MANNEQUIN */
+        .manni-wrap{display:flex;justify-content:center;margin:.5rem 0}
+        .legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:.5rem}
+        .legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--slate-500)}
+        .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+        /* GLASGOW */
+        .gcs-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+        .gcs-label{font-size:12px;color:var(--slate-600);width:170px;flex-shrink:0;font-weight:500}
         .gcs-btns{display:flex;gap:4px;flex:1}
-        .gcs-btn{width:32px;height:32px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);cursor:pointer;font-size:12px;color:var(--color-text-secondary);transition:all .15s;font-family:var(--font-sans)}
-        .gcs-btn:hover{border-color:var(--color-border-info);color:var(--color-text-info)}
-        .gcs-btn.on{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info);font-weight:500}
-        .gcs-total{font-family:var(--font-mono);font-size:22px;font-weight:500;text-align:center;padding:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
-        .gcs-score-label{font-size:11px;color:var(--color-text-secondary);text-align:center;margin-top:4px}
+        .gcs-btn{flex:1;height:34px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);background:var(--slate-50);cursor:pointer;font-size:12px;color:var(--slate-500);transition:all .15s;font-family:var(--font-sans);font-weight:500}
+        .gcs-btn:hover{border-color:var(--blue-400);color:var(--blue-700);background:var(--blue-50)}
+        .gcs-btn.on{background:var(--blue-600);border-color:var(--blue-600);color:white;font-weight:600}
+        .gcs-total{font-family:var(--font-mono);font-size:28px;font-weight:500;text-align:center;padding:12px;background:var(--slate-50);border-radius:var(--radius-md);border:1px solid var(--slate-200);color:var(--slate-800)}
+        .gcs-score-label{font-size:11px;color:var(--slate-500);text-align:center;margin-top:6px;font-weight:500}
+        /* PARAMS */
         .param-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-        .param-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px}
-        .param-card label{font-size:11px;color:var(--color-text-secondary);display:block;margin-bottom:4px}
-        .param-input-row{display:flex;align-items:center;gap:4px}
-        .param-unit{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
+        .param-card{background:var(--slate-50);border:1px solid var(--slate-200);border-radius:var(--radius-md);padding:12px 14px}
+        .param-card label{font-size:11px;color:var(--slate-500);display:block;margin-bottom:6px;font-weight:500}
+        .param-input-row{display:flex;align-items:center;gap:6px}
+        .param-unit{font-size:11px;color:var(--slate-400);white-space:nowrap;font-family:var(--font-mono)}
+        /* FREQ */
+        .freq-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .freq-card{background:var(--slate-50);border:1px solid var(--slate-200);border-radius:var(--radius-md);padding:14px}
+        .freq-title{font-size:11px;font-weight:600;color:var(--slate-700);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em}
+        /* PUPILLES */
+        .pupil-section{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+        .pupil-side-label{font-size:11px;font-weight:600;color:var(--slate-700);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;padding-bottom:6px;border-bottom:1px solid var(--slate-200)}
+        .pupil-visual{display:flex;align-items:center;gap:14px;margin-bottom:12px;padding:10px;background:var(--slate-800);border-radius:var(--radius-md)}
+        .pupil-eye{width:52px;height:52px;border-radius:50%;background:white;border:2px solid var(--slate-400);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+        .pupil-iris{border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .4s;background:#5c3d2e}
+        .pupil-dot{border-radius:50%;background:#080808;transition:all .4s}
+        .pupil-info-text{font-size:11px;color:var(--slate-300);line-height:1.8}
+        /* OBS */
+        .obs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+        /* MAT */
         .mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-        .mat-item{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)}
-        .mat-item input[type=number]{width:50px;text-align:center;padding:4px 6px}
-        .mat-item span{font-size:12px;color:var(--color-text-secondary);flex:1;line-height:1.3}
-        .sig-canvas{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);cursor:crosshair;width:100%;height:120px;touch-action:none}
-        .sig-actions{display:flex;gap:6px;margin-top:6px}
-        .btn-sm{padding:6px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;font-size:12px;color:var(--color-text-primary);font-family:var(--font-sans);transition:all .15s}
-        .btn-sm:hover{background:var(--color-background-secondary)}
-        .btn-primary{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info)}
-        .btn-primary:hover{opacity:.85}
-        .btn-submit{width:100%;padding:12px;background:var(--color-background-info);border:0.5px solid var(--color-border-info);border-radius:var(--border-radius-lg);font-size:15px;font-weight:500;color:var(--color-text-info);cursor:pointer;font-family:var(--font-sans);margin-top:.5rem;transition:all .15s}
-        .btn-submit:hover{opacity:.85}
-        .minor-badge{display:inline-block;background:var(--color-background-warning);color:var(--color-text-warning);font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);font-weight:500;margin-left:8px;vertical-align:middle}
-        .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);padding:10px 20px;border-radius:var(--border-radius-lg);font-size:13px;color:var(--color-text-primary);box-shadow:0 2px 12px rgba(0,0,0,.08);opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
-        .toast.show{opacity:1}
+        .mat-item{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--slate-50);border:1px solid var(--slate-200);border-radius:var(--radius-md)}
+        .mat-item input[type=number]{width:48px;text-align:center;padding:4px 6px;font-size:12px}
+        .mat-item span{font-size:11px;color:var(--slate-600);flex:1;line-height:1.3}
+        /* SIGNATURE */
+        .sig-canvas{border:1px solid var(--slate-200);border-radius:var(--radius-md);background:var(--slate-50);cursor:crosshair;width:100%;height:120px;touch-action:none;display:block}
+        .sig-actions{display:flex;gap:8px;margin-top:8px}
+        .btn-sm{padding:7px 16px;border:1px solid var(--slate-200);border-radius:var(--radius-md);background:white;cursor:pointer;font-size:12px;color:var(--slate-600);font-family:var(--font-sans);font-weight:500;transition:all .15s}
+        .btn-sm:hover{background:var(--slate-50);border-color:var(--slate-300)}
+        .btn-primary{background:var(--blue-50);border-color:var(--blue-400);color:var(--blue-700)}
+        .btn-primary:hover{background:var(--blue-100)}
+        .btn-submit{width:calc(100% - 48px);margin:0 24px;padding:14px;background:var(--slate-900);border:none;border-radius:var(--radius-lg);font-size:14px;font-weight:600;color:white;cursor:pointer;font-family:var(--font-sans);transition:all .2s;letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:10px}
+        .btn-submit:hover{background:var(--slate-800);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+        .btn-submit svg{width:16px;height:16px;stroke:white;fill:none;stroke-width:2}
+        .minor-badge{display:inline-block;background:var(--amber-100);color:var(--amber-800);font-size:10px;padding:2px 8px;border-radius:var(--radius-sm);font-weight:600;margin-left:8px;vertical-align:middle}
+        .motif-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+        .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        /* TOAST */
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--slate-900);color:white;padding:12px 24px;border-radius:var(--radius-lg);font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.2);opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:99}
+        .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+        /* PDF OVERLAY */
+        .pdf-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:opacity .3s}
+        .pdf-overlay.show{opacity:1;pointer-events:all}
+        .pdf-spinner{width:44px;height:44px;border:3px solid rgba(255,255,255,.15);border-top-color:#60a5fa;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:14px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .pdf-msg{color:white;font-size:14px;font-weight:500;letter-spacing:.01em}
+        .pdf-sub{color:var(--slate-400);font-size:12px;margin-top:6px}
+        /* PUPIL SIZE SELECTOR */
+        .pupil-size-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:10px;flex-wrap:wrap}
+        .psd{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+        .psd-circle{border-radius:50%;background:#1a1a1a;border:2px solid var(--slate-300);transition:all .2s}
+        .psd-circle.sel{border-color:var(--blue-600);background:var(--blue-600)}
+        .psd-label{font-size:9px;color:var(--slate-400)}
+        @media(max-width:640px){.grid2,.grid3,.two-col,.freq-grid,.pupil-section,.motif-grid,.obs-grid{grid-template-columns:1fr}.param-group{grid-template-columns:1fr 1fr}.mat-grid{grid-template-columns:1fr 1fr}.gcs-row{flex-direction:column;align-items:flex-start}.gcs-label{width:auto}.pc-fields{flex-direction:column;align-items:flex-start}}
     </style>
 </head>
 <body>
 <div class="wrap">
 <div class="page-header">
-  <div class="header-icon">
-    <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-  </div>
-  <div>
-    <div class="page-title">Fiche de prise en charge</div>
-    <div class="page-sub">Centre Hospitalier de Liège — Unité médicale d'intervention</div>
-  </div>
-  <div class="intervention-badge" id="numIntervention">N° —</div>
-</div>
-
-<!-- SECTION INFORMATIONS -->
-<div class="section">
-  <div class="section-label">Informations patient</div>
-  <div class="grid2" style="margin-bottom:10px">
-    <div class="field"><label>Nom</label><input type="text" id="nom" placeholder="Nom de famille"></div>
-    <div class="field"><label>Prénom</label><input type="text" id="prenom" placeholder="Prénom"></div>
-  </div>
-  <div class="grid3" style="margin-bottom:10px">
-    <div class="field">
-      <label>Date de naissance <span id="minorBadge" class="minor-badge" style="display:none">Mineur</span></label>
-      <input type="date" id="dob" onchange="checkMinor()">
-    </div>
-    <div class="field"><label>Téléphone</label><input type="tel" id="tel" placeholder="+32 000 00 00 00"></div>
-    <div class="field">
-      <label>Sexe</label>
-      <div class="radio-row" style="margin-top:4px">
-        <button class="r-btn" onclick="setGender(this,'M')">Masculin</button>
-        <button class="r-btn" onclick="setGender(this,'F')">Féminin</button>
-        <button class="r-btn" onclick="setGender(this,'A')">Autre</button>
-      </div>
-    </div>
-  </div>
-  <div class="field"><label>Adresse</label><input type="text" id="adresse" placeholder="Rue, numéro, ville"></div>
-</div>
-
-<!-- SECTION PRISE EN CHARGE -->
-<div class="section">
-  <div class="section-label">Prise en charge</div>
-  <div id="pcRows"></div>
-  <div class="field" style="margin-top:10px"><label>Autres soins</label><textarea id="autresSoins" placeholder="Précisez..."></textarea></div>
-</div>
-
-<!-- SECTION BLESSURES -->
-<div class="section">
-  <div class="section-label">Blessures et douleurs</div>
-  <div style="overflow-x:auto;margin-bottom:1rem">
-    <table class="inj-table" id="injTable"></table>
-  </div>
-  <div class="grid2">
+    <div class="header-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
     <div>
-      <div class="field"><label>Autres blessures</label><textarea id="autresBlessures" placeholder="Précisez..."></textarea></div>
+        <div class="page-title">Fiche de prise en charge</div>
+        <div class="page-sub">Centre Hospitalier de Liège — Unité médicale d'intervention</div>
     </div>
-    <div>
-      <div class="manni-wrap">
-        <svg class="manni-svg" width="140" height="240" viewBox="0 0 140 240" id="manni"></svg>
-      </div>
-      <div class="legend" id="manni-legend"></div>
+    <div class="intervention-badge" id="numIntervention">N° —</div>
+</div>
+<div class="form-body">
+
+<!-- INFORMATIONS PATIENT -->
+<div class="section">
+    <div class="section-label">Informations patient</div>
+    <div class="grid2" style="margin-bottom:12px">
+        <div class="field"><label>Nom</label><input type="text" id="nom" placeholder="Nom de famille"></div>
+        <div class="field"><label>Prénom</label><input type="text" id="prenom" placeholder="Prénom"></div>
     </div>
-  </div>
-</div>
-
-<!-- SECTION GLASGOW -->
-<div class="section">
-  <div class="section-label">Score de Glasgow</div>
-  <div id="gcsRows"></div>
-  <div style="max-width:180px;margin:0 auto;margin-top:12px">
-    <div class="gcs-total"><span id="gcsTotalVal">—</span> <span style="font-size:14px;color:var(--color-text-secondary)">/15</span></div>
-    <div class="gcs-score-label" id="gcsInterp">Aucune sélection</div>
-  </div>
-</div>
-
-<!-- SECTION RESPIRATION -->
-<div class="section">
-  <div class="section-label">Respiration pulmonaire</div>
-  <div id="respRows"></div>
-</div>
-
-<!-- SECTION ARYTHMIE -->
-<div class="section">
-  <div class="section-label">Arythmie</div>
-  <div id="arytRows"></div>
-</div>
-
-<!-- SECTION PARAMETRES -->
-<div class="section">
-  <div class="section-label">Paramètres vitaux</div>
-  <div class="param-group" id="paramGroup"></div>
-</div>
-
-<!-- SECTION MATÉRIEL -->
-<div class="section">
-  <div class="section-label">Matériel utilisé</div>
-  <div class="mat-grid" id="matGrid"></div>
-</div>
-
-<!-- SECTION FIN -->
-<div class="section">
-  <div class="section-label">Fin de prise en charge</div>
-  <div class="grid2" style="margin-bottom:10px">
-    <div class="field"><label>Déroulé de l'opération</label><textarea id="deroule" placeholder="Décrivez le déroulement chronologique..."></textarea></div>
-    <div class="field"><label>Développement du soin</label><textarea id="developpement" placeholder="Détails des soins prodigués..."></textarea></div>
-  </div>
-  <div class="check-row" id="finCheck" onclick="toggleCheck(this)">
-    <div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-    <div class="check-label" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <span>Fin de prise en charge</span>
-      <input type="datetime-local" id="finDateTime" onclick="event.stopImmediatePropagation()" style="width:auto;font-size:12px" onchange="this.parentElement.closest('.check-row').classList.add('checked')">
+    <div class="grid3" style="margin-bottom:12px">
+        <div class="field">
+            <label>Date de naissance <span id="minorBadge" class="minor-badge" style="display:none">Mineur</span></label>
+            <input type="date" id="dob" onchange="checkMinor()">
+        </div>
+        <div class="field"><label>Téléphone</label><input type="tel" id="tel" placeholder="+32 000 00 00 00"></div>
+        <div class="field">
+            <label>Sexe</label>
+            <div class="radio-row">
+                <button class="r-btn" onclick="setGender(this,'M')">Masculin</button>
+                <button class="r-btn" onclick="setGender(this,'F')">Féminin</button>
+                <button class="r-btn" onclick="setGender(this,'A')">Autre</button>
+            </div>
+        </div>
     </div>
-  </div>
+    <div class="field"><label>Adresse</label><input type="text" id="adresse" placeholder="Rue, numéro, ville"></div>
 </div>
 
-<!-- SECTION SIGNATURE -->
+<!-- MOTIF -->
 <div class="section">
-  <div class="section-label">Signature du soignant</div>
-  <div class="field" style="margin-bottom:8px"><label>Nom du soignant / rédacteur</label><input type="text" id="sigNom" placeholder="Nom complet"></div>
-  <canvas class="sig-canvas" id="sigCanvas" width="900" height="120"></canvas>
-  <div class="sig-actions">
-    <button class="btn-sm" onclick="clearSig()">Effacer</button>
-    <button class="btn-sm btn-primary" onclick="exportSig()">Valider la signature</button>
-  </div>
+    <div class="section-label">Motif de prise en charge</div>
+    <div class="motif-grid" id="motifGrid"></div>
+    <div class="field" style="margin-top:10px;display:none" id="autresMotifWrap">
+        <label>Précisez le motif</label>
+        <input type="text" id="autresMotifText" placeholder="Décrivez le motif...">
+    </div>
 </div>
 
-<button class="btn-submit" onclick="submitForm()">Enregistrer la fiche de prise en charge</button>
+<!-- PRISE EN CHARGE -->
+<div class="section">
+    <div class="section-label">Prise en charge</div>
+    <div id="pcRows"></div>
+    <div class="field" style="margin-top:10px"><label>Autres soins / remarques</label><textarea id="autresSoins" placeholder="Précisez..."></textarea></div>
 </div>
 
+<!-- BLESSURES -->
+<div class="section">
+    <div class="section-label">Blessures et douleurs</div>
+    <div style="overflow-x:auto;margin-bottom:1rem"><table class="inj-table" id="injTable"></table></div>
+    <div class="two-col">
+        <div class="field"><label>Autres blessures</label><textarea id="autresBlessures" placeholder="Précisez..."></textarea></div>
+        <div>
+            <div class="manni-wrap"><svg width="140" height="240" viewBox="0 0 140 240" id="manni"></svg></div>
+            <div class="legend" id="manni-legend"></div>
+        </div>
+    </div>
+</div>
+
+<!-- PARAMÈTRES VITAUX -->
+<div class="section">
+    <div class="section-label">Paramètres vitaux</div>
+    <div class="param-group" id="paramGroup"></div>
+</div>
+
+<!-- FRÉQUENCES -->
+<div class="section">
+    <div class="section-label">Fréquence cardiaque &amp; respiratoire</div>
+    <div class="freq-grid">
+        <div class="freq-card">
+            <div class="freq-title">❤ Fréquence cardiaque</div>
+            <div id="freqCardRows"></div>
+        </div>
+        <div class="freq-card">
+            <div class="freq-title">🫁 Fréquence respiratoire</div>
+            <div id="freqRespiRows"></div>
+        </div>
+    </div>
+</div>
+
+<!-- RÉACTION PUPILLAIRE -->
+<div class="section">
+    <div class="section-label">Réaction des pupilles</div>
+    <div class="pupil-section" id="pupilSection"></div>
+</div>
+
+<!-- GLASGOW -->
+<div class="section">
+    <div class="section-label">Score de Glasgow</div>
+    <div id="gcsRows"></div>
+    <div style="max-width:200px;margin:14px auto 0">
+        <div class="gcs-total"><span id="gcsTotalVal">—</span> <span style="font-size:14px;color:var(--slate-400)">/15</span></div>
+        <div class="gcs-score-label" id="gcsInterp">Aucune sélection</div>
+    </div>
+</div>
+
+<!-- ARYTHMIE -->
+<div class="section">
+    <div class="section-label">Arythmie</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="arytRows"></div>
+</div>
+
+<!-- OBSERVATIONS CLINIQUES -->
+<div class="section">
+    <div class="section-label">Observations cliniques</div>
+    <div class="obs-grid" id="obsGrid"></div>
+    <div class="field" style="margin-top:10px"><label>Autres observations</label><textarea id="autresObs" placeholder="Toute autre observation clinique pertinente..."></textarea></div>
+</div>
+
+<!-- MATÉRIEL -->
+<div class="section">
+    <div class="section-label">Matériel utilisé</div>
+    <div class="mat-grid" id="matGrid"></div>
+</div>
+
+<!-- FIN -->
+<div class="section">
+    <div class="section-label">Fin de prise en charge</div>
+    <div class="grid2" style="margin-bottom:12px">
+        <div class="field"><label>Déroulé de l'opération</label><textarea id="deroule" placeholder="Déroulement chronologique..."></textarea></div>
+        <div class="field"><label>Développement du soin</label><textarea id="developpement" placeholder="Détails des soins prodigués..."></textarea></div>
+    </div>
+    <div class="check-row" id="finCheck" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="check-label" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <span>Fin de prise en charge</span>
+            <input type="datetime-local" id="finDateTime" onclick="event.stopImmediatePropagation()" style="width:auto;font-size:12px" onchange="this.closest('.check-row').classList.add('checked')">
+        </div>
+    </div>
+</div>
+
+<!-- SIGNATURE -->
+<div class="section">
+    <div class="section-label">Signature du soignant</div>
+    <div class="field" style="margin-bottom:10px"><label>Nom du soignant / rédacteur</label><input type="text" id="sigNom" placeholder="Nom complet"></div>
+    <canvas class="sig-canvas" id="sigCanvas" width="900" height="120"></canvas>
+    <div class="sig-actions">
+        <button class="btn-sm" onclick="clearSig()">Effacer</button>
+        <button class="btn-sm btn-primary" onclick="exportSig()">Valider la signature</button>
+    </div>
+</div>
+
+<button class="btn-submit" onclick="submitForm()">
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Enregistrer et générer le PDF
+</button>
+
+</div></div>
 <div class="toast" id="toast"></div>
+<div class="pdf-overlay" id="pdfOverlay">
+    <div class="pdf-spinner"></div>
+    <div class="pdf-msg" id="pdfMsg">Génération du PDF...</div>
+    <div class="pdf-sub" id="pdfSub">Veuillez patienter</div>
+</div>
 
 <script>
-// ==================== TON CODE ORIGINAL (inchangé) ====================
-
-const genNum = () => {
-  const d = new Date();
-  const p = v => String(v).padStart(2,'0');
-  return `INT-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.floor(Math.random()*9000+1000)}`;
-};
+// ===== INIT =====
+const genNum = () => { const d=new Date(),p=v=>String(v).padStart(2,'0'); return `INT-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.floor(Math.random()*9000+1000)}`; };
 document.getElementById('numIntervention').textContent = genNum();
+function checkMinor(){const v=document.getElementById('dob').value;if(!v)return;const age=(Date.now()-new Date(v))/(1000*60*60*24*365.25);document.getElementById('minorBadge').style.display=age<18?'inline-block':'none';}
+let gender='';
+function setGender(btn,v){gender=v;btn.closest('.radio-row').querySelectorAll('.r-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function toggleCheck(el){el.classList.toggle('checked');}
+function showToast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
 
-function checkMinor() {
-  const v = document.getElementById('dob').value;
-  if(!v) return;
-  const age = (Date.now() - new Date(v)) / (1000*60*60*24*365.25);
-  document.getElementById('minorBadge').style.display = age < 18 ? 'inline-block' : 'none';
-}
+// ===== MOTIF =====
+const motifs=['Chute','Bagarre / Agression','AVP (accident de la voie publique)','Malaise','Douleur thoracique','Détresse respiratoire','Traumatisme crânien','Brûlure','Intoxication / Surdosage','Plaie balistique','Noyade','Accident de sport','Arrêt cardiaque','Autres'];
+let selMotif='';
+const motifGrid=document.getElementById('motifGrid');
+motifs.forEach(m=>{
+    const row=document.createElement('div');row.className='check-row';row.style.marginBottom='0';
+    row.innerHTML=`<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label" style="font-size:12px">${m}</div>`;
+    row.onclick=()=>{motifGrid.querySelectorAll('.check-row').forEach(x=>x.classList.remove('checked'));row.classList.add('checked');selMotif=m;document.getElementById('autresMotifWrap').style.display=m==='Autres'?'flex':'none';};
+    motifGrid.appendChild(row);
+});
 
-let gender = '';
-function setGender(btn, v) {
-  gender = v;
-  btn.closest('.radio-row').querySelectorAll('.r-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// PRISE EN CHARGE
-const pcTypes = [
-  {id:'equipe', label:'Par Équipe'},
-  {id:'ambulance', label:'Par Ambulance'},
-  {id:'smur', label:'Par SMUR'},
-  {id:'hopital', label:'Par Hôpital'},
-  {id:'refus', label:'Refus de soins', noSoignants:true},
-  {id:'retour', label:'Retour à la vie active', noSoignants:true},
+// ===== PRISE EN CHARGE =====
+const pcTypes=[
+    {id:'equipe',    label:'Par Équipe',        hasName:true},
+    {id:'ambulance', label:'Par Ambulance',      hasName:true},
+    {id:'smur',      label:'Par SMUR',           hasName:true},
+    {id:'hopital',   label:'Par Hôpital',        hasName:true},
+    {id:'refus',     label:'Refus de soins',     hasName:false},
+    {id:'retour',    label:'Retour vie active',  hasName:false},
 ];
-const pcContainer = document.getElementById('pcRows');
-pcTypes.forEach(t => {
-  const row = document.createElement('div');
-  row.className = 'check-row';
-  row.id = 'pc_'+t.id;
-  row.innerHTML = `<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-    <div class="check-label" style="width:100%">
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span>${t.label}</span>
-        ${!t.noSoignants ? `<input type="text" placeholder="Noms des soignants" style="flex:1;min-width:150px;font-size:12px" onclick="event.stopImmediatePropagation()">` : ''}
-        <input type="datetime-local" style="width:auto;font-size:12px" onclick="event.stopImmediatePropagation()">
-      </div>
+const pcContainer=document.getElementById('pcRows');
+pcTypes.forEach(t=>{
+    const row=document.createElement('div');row.className='pc-row';row.id='pc_'+t.id;
+    row.innerHTML=`<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    <div class="pc-content">
+        <span class="pc-label">${t.label}</span>
+        <div class="pc-fields">
+            ${t.hasName?`<input type="text" class="pc-name-input" placeholder="Soignants / équipe" onclick="event.stopPropagation()">`:``}
+            <div class="pc-dt-group"><span class="pc-dt-label in-label">IN</span><input type="datetime-local" class="pc-dt-input" onclick="event.stopPropagation()" title="Arrivée"></div>
+            <div class="pc-dt-group"><span class="pc-dt-label out-label">OUT</span><input type="datetime-local" class="pc-dt-input" onclick="event.stopPropagation()" title="Départ"></div>
+        </div>
     </div>`;
-  row.addEventListener('click', function(e) {
-    if(e.target.tagName === 'INPUT') return;
-    toggleCheck(this);
-  });
-  pcContainer.appendChild(row);
+    row.addEventListener('click',function(e){if(e.target.tagName==='INPUT')return;this.classList.toggle('checked');const cb=this.querySelector('.check-box');if(this.classList.contains('checked')){cb.style.background='var(--blue-600)';cb.style.borderColor='var(--blue-600)';cb.querySelector('svg').style.display='block';}else{cb.style.background='';cb.style.borderColor='';cb.querySelector('svg').style.display='none';}});
+    pcContainer.appendChild(row);
 });
 
-function toggleCheck(el) {
-  el.classList.toggle('checked');
-}
+// ===== INJURY TABLE =====
+const injCols=['Tête','Thorax','Abdomen','MS Droit','MS Gauche','MI Droit','MI Gauche'];
+const injRows=['Abrasion','Lacération','Traumatisme','Douleur aiguë','Contusion','Plaie balistique','Brûlure','Fracture','Luxation','Œdème'];
+const injColors={'Abrasion':'#378ADD','Lacération':'#E24B4A','Traumatisme':'#BA7517','Douleur aiguë':'#D4537E','Contusion':'#1D9E75','Plaie balistique':'#7F77DD','Brûlure':'#EF9F27','Fracture':'#639922','Luxation':'#3B6D11','Œdème':'#993C1D'};
+const injState={};injCols.forEach(c=>{injState[c]={};});
+const tbl=document.getElementById('injTable');
+let thHtml='<tr><th></th>';injCols.forEach(c=>thHtml+=`<th>${c}</th>`);thHtml+='</tr>';tbl.innerHTML=thHtml;
+injRows.forEach(r=>{const tr=document.createElement('tr');let html=`<td>${r}</td>`;injCols.forEach(c=>{const key=r+'|'+c;html+=`<td><div class="cell-check" id="cc_${CSS.escape(key)}" onclick="toggleCell('${r}','${c}')"><svg viewBox="0 0 12 12" style="stroke:${injColors[r]}"><polyline points="2,6 5,9 10,3"/></svg></div></td>`;});tr.innerHTML=html;tbl.appendChild(tr);});
+function toggleCell(row,col){if(!injState[col][row])injState[col][row]=true;else delete injState[col][row];const key=row+'|'+col;const el=document.getElementById('cc_'+CSS.escape(key));if(injState[col][row]){el.classList.add('on');el.style.background=injColors[row]+'33';el.style.borderColor=injColors[row];}else{el.classList.remove('on');el.style.background='';el.style.borderColor='';}updateMannequin();}
 
-// BLESSURES TABLE
-const injCols = ['Tête','Thorax','Abdomen','MS Droit','MS Gauche','MI Droit','MI Gauche'];
-const injRows = ['Abrasion','Lacération','Traumatisme','Douleur aiguë','Contusion','Plaie balistique','Brûlure','Fracture','Luxation','Œdème'];
-const injColors = {
-  'Abrasion':'#378ADD','Lacération':'#E24B4A','Traumatisme':'#BA7517','Douleur aiguë':'#D4537E',
-  'Contusion':'#1D9E75','Plaie balistique':'#7F77DD','Brûlure':'#EF9F27','Fracture':'#639922',
-  'Luxation':'#3B6D11','Œdème':'#993C1D'
-};
-const injState = {};
-injCols.forEach(c => {injState[c] = {};});
-
-const tbl = document.getElementById('injTable');
-let thHtml = '<tr><th></th>';
-injCols.forEach(c => thHtml += `<th>${c}</th>`);
-thHtml += '</tr>';
-tbl.innerHTML = thHtml;
-
-injRows.forEach(r => {
-  const tr = document.createElement('tr');
-  let html = `<td>${r}</td>`;
-  injCols.forEach(c => {
-    const key = r+'|'+c;
-    html += `<td><div class="cell-check" id="cc_${CSS.escape(key)}" onclick="toggleCell('${r}','${c}')">
-      <svg viewBox="0 0 12 12" style="stroke:${injColors[r]};width:12px;height:12px"><polyline points="2,6 5,9 10,3"/></svg>
-    </div></td>`;
-  });
-  tr.innerHTML = html;
-  tbl.appendChild(tr);
-});
-
-function toggleCell(row, col) {
-  if (!injState[col][row]) injState[col][row] = true; else delete injState[col][row];
-  const key = row+'|'+col;
-  const el = document.getElementById('cc_'+CSS.escape(key));
-  if (injState[col][row]) {
-    el.classList.add('on');
-    el.style.background = injColors[row]+'33';
-    el.style.borderColor = injColors[row];
-  } else {
-    el.classList.remove('on');
-    el.style.background = '';
-    el.style.borderColor = '';
-  }
-  updateMannequin();
-}
-
-// MANNEQUIN
-const zoneMap = {
-  'Tête': [{type:'ellipse',cx:70,cy:22,rx:16,ry:18}],
-  'Thorax': [{type:'rect',x:50,y:46,w:40,h:42,r:4}],
-  'Abdomen': [{type:'rect',x:50,y:92,w:40,h:30,r:4}],
-  'MS Droit': [{type:'rect',x:24,y:48,w:22,h:60,r:4}],
-  'MS Gauche': [{type:'rect',x:94,y:48,w:22,h:60,r:4}],
-  'MI Droit': [{type:'rect',x:52,y:128,w:18,h:80,r:4}],
-  'MI Gauche': [{type:'rect',x:70,y:128,w:18,h:80,r:4}],
-};
-
-function drawMannequin() {
-  const svg = document.getElementById('manni');
-  svg.innerHTML = `
-    <ellipse cx="70" cy="22" rx="16" ry="18" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
-    <rect x="50" y="46" width="40" height="42" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
-    <rect x="50" y="92" width="40" height="30" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
-    <rect x="24" y="48" width="22" height="60" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
-    <rect x="94" y="48" width="22" height="60" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
-    <rect x="52" y="126" width="18" height="82" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
-    <rect x="70" y="126" width="18" height="82" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
-    <line x1="50" y1="46" x2="26" y2="48" stroke="var(--color-border-secondary)" stroke-width="1.5"/>
-    <line x1="90" y1="46" x2="94" y2="48" stroke="var(--color-border-secondary)" stroke-width="1.5"/>
-    <line x1="58" y1="122" x2="56" y2="126" stroke="var(--color-border-secondary)" stroke-width="1.5"/>
-    <line x1="72" y1="122" x2="74" y2="126" stroke="var(--color-border-secondary)" stroke-width="1.5"/>
-    <rect x="50" y="122" width="40" height="6" rx="2" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
-  `;
-}
-
-function updateMannequin() {
-  drawMannequin();
-  const svg = document.getElementById('manni');
-  const legend = document.getElementById('manni-legend');
-  const legendItems = {};
-  Object.entries(zoneMap).forEach(([zone, shapes]) => {
-    const injuries = Object.entries(injState[zone] || {}).filter(([,v]) => v).map(([r]) => r);
-    if (!injuries.length) return;
-    const n = injuries.length;
-    shapes.forEach(s => {
-      if (n === 1) {
-        const col = injColors[injuries[0]];
-        legendItems[injuries[0]] = col;
-        appendShape(svg, s, col+'55', col, 1.5);
-      } else {
-        const arcW = s.type === 'ellipse' ? s.rx * 2 : s.w;
-        const arcH = s.type === 'ellipse' ? s.ry * 2 : s.h;
-        const segW = arcW / n;
-        const x0 = s.type === 'ellipse' ? s.cx - s.rx : s.x;
-        const y0 = s.type === 'ellipse' ? s.cy - s.ry : s.y;
-        const r = s.r || 4;
-        injuries.forEach((inj, i) => {
-          const col = injColors[inj];
-          legendItems[inj] = col;
-          const sx = x0 + i * segW;
-          const g = document.createElementNS('http://www.w3.org/2000/svg','rect');
-          g.setAttribute('x', sx); g.setAttribute('y', y0);
-          g.setAttribute('width', segW); g.setAttribute('height', arcH);
-          g.setAttribute('fill', col+'77'); g.setAttribute('stroke', col);
-          g.setAttribute('stroke-width','1');
-          g.setAttribute('rx', i === 0 ? r : 0);
-          svg.appendChild(g);
-        });
-      }
-    });
-  });
-  legend.innerHTML = Object.entries(legendItems).map(([inj, col]) =>
-    `<div class="legend-item"><div class="legend-dot" style="background:${col}"></div>${inj}</div>`
-  ).join('');
-}
-
-function appendShape(svg, s, fill, stroke, sw) {
-  let el;
-  if (s.type === 'ellipse') {
-    el = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
-    el.setAttribute('cx',s.cx); el.setAttribute('cy',s.cy);
-    el.setAttribute('rx',s.rx); el.setAttribute('ry',s.ry);
-  } else {
-    el = document.createElementNS('http://www.w3.org/2000/svg','rect');
-    el.setAttribute('x',s.x); el.setAttribute('y',s.y);
-    el.setAttribute('width',s.w); el.setAttribute('height',s.h);
-    el.setAttribute('rx', s.r || 4);
-  }
-  el.setAttribute('fill', fill); el.setAttribute('stroke', stroke);
-  el.setAttribute('stroke-width', sw);
-  svg.appendChild(el);
-}
+// ===== MANNEQUIN =====
+const zoneMap={'Tête':[{type:'ellipse',cx:70,cy:22,rx:16,ry:18}],'Thorax':[{type:'rect',x:50,y:46,w:40,h:42,r:4}],'Abdomen':[{type:'rect',x:50,y:92,w:40,h:30,r:4}],'MS Droit':[{type:'rect',x:24,y:48,w:22,h:60,r:4}],'MS Gauche':[{type:'rect',x:94,y:48,w:22,h:60,r:4}],'MI Droit':[{type:'rect',x:52,y:128,w:18,h:80,r:4}],'MI Gauche':[{type:'rect',x:70,y:128,w:18,h:80,r:4}]};
+function drawMannequin(){const svg=document.getElementById('manni');svg.innerHTML=`<ellipse cx="70" cy="22" rx="16" ry="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/><rect x="50" y="46" width="40" height="42" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/><rect x="50" y="92" width="40" height="30" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/><rect x="24" y="48" width="22" height="60" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/><rect x="94" y="48" width="22" height="60" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/><rect x="52" y="126" width="18" height="82" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/><rect x="70" y="126" width="18" height="82" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/><line x1="50" y1="46" x2="26" y2="48" stroke="#cbd5e1" stroke-width="1.5"/><line x1="90" y1="46" x2="94" y2="48" stroke="#cbd5e1" stroke-width="1.5"/><line x1="58" y1="122" x2="56" y2="126" stroke="#cbd5e1" stroke-width="1.5"/><line x1="72" y1="122" x2="74" y2="126" stroke="#cbd5e1" stroke-width="1.5"/><rect x="50" y="122" width="40" height="6" rx="2" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>`;}
+function updateMannequin(){drawMannequin();const svg=document.getElementById('manni');const legend=document.getElementById('manni-legend');const legendItems={};Object.entries(zoneMap).forEach(([zone,shapes])=>{const injuries=Object.entries(injState[zone]||{}).filter(([,v])=>v).map(([r])=>r);if(!injuries.length)return;const n=injuries.length;shapes.forEach(s=>{if(n===1){const col=injColors[injuries[0]];legendItems[injuries[0]]=col;appendShape(svg,s,col+'55',col,1.5);}else{const arcW=s.type==='ellipse'?s.rx*2:s.w;const arcH=s.type==='ellipse'?s.ry*2:s.h;const segW=arcW/n;const x0=s.type==='ellipse'?s.cx-s.rx:s.x;const y0=s.type==='ellipse'?s.cy-s.ry:s.y;injuries.forEach((inj,i)=>{const col=injColors[inj];legendItems[inj]=col;const g=document.createElementNS('http://www.w3.org/2000/svg','rect');g.setAttribute('x',x0+i*segW);g.setAttribute('y',y0);g.setAttribute('width',segW);g.setAttribute('height',arcH);g.setAttribute('fill',col+'77');g.setAttribute('stroke',col);g.setAttribute('stroke-width','1');g.setAttribute('rx',i===0?(s.r||4):0);svg.appendChild(g);});}});});legend.innerHTML=Object.entries(legendItems).map(([inj,col])=>`<div class="legend-item"><div class="legend-dot" style="background:${col}"></div>${inj}</div>`).join('');}
+function appendShape(svg,s,fill,stroke,sw){let el;if(s.type==='ellipse'){el=document.createElementNS('http://www.w3.org/2000/svg','ellipse');el.setAttribute('cx',s.cx);el.setAttribute('cy',s.cy);el.setAttribute('rx',s.rx);el.setAttribute('ry',s.ry);}else{el=document.createElementNS('http://www.w3.org/2000/svg','rect');el.setAttribute('x',s.x);el.setAttribute('y',s.y);el.setAttribute('width',s.w);el.setAttribute('height',s.h);el.setAttribute('rx',s.r||4);}el.setAttribute('fill',fill);el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',sw);svg.appendChild(el);}
 drawMannequin();
 
-// GLASGOW
-const gcsData = [
-  {id:'yeux', label:'Ouverture des yeux', max:4, labels:['1 — Nulle','2 — À la douleur','3 — Au bruit','4 — Spontanée']},
-  {id:'verbale', label:'Réponse verbale', max:5, labels:['1 — Nulle','2 — Sons incompréhensibles','3 — Mots inappropriés','4 — Confuse','5 — Orientée']},
-  {id:'motrice', label:'Réponse motrice', max:6, labels:['1 — Nulle','2 — Extension','3 — Flexion anormale','4 — Retrait','5 — Localisatrice','6 — Sur ordre']},
-];
-const gcsVals = {yeux:0, verbale:0, motrice:0};
-const gcsContainer = document.getElementById('gcsRows');
-gcsData.forEach(g => {
-  const row = document.createElement('div');
-  row.className = 'gcs-row';
-  let btns = '';
-  for(let i=1;i<=g.max;i++) btns += `<button class="gcs-btn" title="${g.labels[i-1]}" onclick="setGcs('${g.id}',${i},this)">${i}</button>`;
-  row.innerHTML = `<div class="gcs-label">${g.label}</div><div class="gcs-btns">${btns}</div>`;
-  gcsContainer.appendChild(row);
-});
+// ===== PARAMÈTRES =====
+const params=[{id:'ta_sys',label:'Tension artérielle',type:'ta'},{id:'pls',label:'Pouls',unit:'BPM'},{id:'spo2',label:'SpO₂',unit:'%'},{id:'glyc',label:'Glycémie',unit:'mg/dL'},{id:'temp',label:'Température',unit:'°C'},{id:'heure',label:'Heure de mesure',type:'time'}];
+const pg=document.getElementById('paramGroup');
+params.forEach(p=>{const card=document.createElement('div');card.className='param-card';if(p.type==='ta'){card.innerHTML=`<label>Tension artérielle</label><div style="display:flex;align-items:center;gap:6px"><input type="number" id="ta_sys" placeholder="Sys" style="width:62px;text-align:center"><span style="color:#94a3b8">/</span><input type="number" id="ta_dia" placeholder="Dia" style="width:62px;text-align:center"><span class="param-unit">mmHg</span></div>`;}else if(p.type==='time'){card.innerHTML=`<label>${p.label}</label><input type="time" id="${p.id}">`;}else{card.innerHTML=`<label>${p.label}</label><div class="param-input-row"><input type="number" id="${p.id}" step="0.1" placeholder="—"><span class="param-unit">${p.unit}</span></div>`;}pg.appendChild(card);});
 
-function setGcs(id, val, btn) {
-  gcsVals[id] = val;
-  btn.closest('.gcs-btns').querySelectorAll('.gcs-btn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  const total = gcsVals.yeux + gcsVals.verbale + gcsVals.motrice;
-  const filled = [gcsVals.yeux, gcsVals.verbale, gcsVals.motrice].filter(v => v > 0).length;
-  document.getElementById('gcsTotalVal').textContent = filled === 3 ? total : '—';
-  const interp = total >= 13 ? 'Légère (13–15)' : total >= 9 ? 'Modérée (9–12)' : total >= 3 ? 'Sévère (3–8)' : 'Sélection en cours';
-  document.getElementById('gcsInterp').textContent = filled === 3 ? interp : 'Sélection en cours';
+// ===== FRÉQ CARDIAQUE =====
+const freqCardItems=[{label:'Bradycardie  (< 60 bpm)',icon:'⬇'},{label:'Normocardie (60–100 bpm)',icon:'✓'},{label:'Tachycardie  (> 100 bpm)',icon:'⬆'},{label:'Fibrillation / irrégulier',icon:'〰'}];
+const freqCardContainer=document.getElementById('freqCardRows');
+freqCardItems.forEach(r=>{const row=document.createElement('div');row.className='check-row';row.style.marginBottom='6px';row.innerHTML=`<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label">${r.icon} ${r.label}</div>`;row.onclick=()=>{freqCardContainer.querySelectorAll('.check-row').forEach(x=>x.classList.remove('checked'));row.classList.add('checked');};freqCardContainer.appendChild(row);});
+
+// ===== FRÉQ RESPI =====
+const freqRespiItems=[{label:'Bradypnée  (< 12 cycles/min)',icon:'⬇'},{label:'Eupnée      (12–20 cycles/min)',icon:'✓'},{label:'Tachypnée  (> 20 cycles/min)',icon:'⬆'},{label:'Apnée / arrêt respiratoire',icon:'⛔'}];
+const freqRespiContainer=document.getElementById('freqRespiRows');
+freqRespiItems.forEach(r=>{const row=document.createElement('div');row.className='check-row';row.style.marginBottom='6px';row.innerHTML=`<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label">${r.icon} ${r.label}</div>`;row.onclick=()=>{freqRespiContainer.querySelectorAll('.check-row').forEach(x=>x.classList.remove('checked'));row.classList.add('checked');};freqRespiContainer.appendChild(row);});
+
+// ===== PUPILLES =====
+const pupilReactions=['Réactive','Aréactive','Mydriase (dilatée)','Myosis (contractée)','Anisocorie','Hippus (oscillante)'];
+const pupilSizes=[2,3,4,5,6,7];
+const pupilData={L:{size:null,reaction:null},R:{size:null,reaction:null}};
+
+function buildPupilSide(side){
+    const sideLabel=side==='L'?'👁 Œil Gauche':'👁 Œil Droit';
+    const div=document.createElement('div');
+    div.innerHTML=`<div class="pupil-side-label">${sideLabel}</div>
+    <div class="pupil-visual">
+        <div class="pupil-eye" id="pupilEye_${side}">
+            <div class="pupil-iris" id="pupilIris_${side}" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;">
+                <div id="pupilCore_${side}" style="width:16px;height:16px;border-radius:50%;background:#0a0a0a;transition:all .4s;"></div>
+            </div>
+        </div>
+        <div class="pupil-info-text">
+            <div id="pupilSzLbl_${side}">Diamètre : <strong>—</strong></div>
+            <div id="pupilRxLbl_${side}">Réaction : <strong>—</strong></div>
+        </div>
+    </div>
+    <div style="font-size:11px;font-weight:600;color:var(--slate-600);margin-bottom:6px;">Diamètre pupillaire (mm)</div>
+    <div class="pupil-size-row" id="pupilSizes_${side}"></div>
+    <div style="font-size:11px;font-weight:600;color:var(--slate-600);margin-bottom:6px;">Réaction</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;" id="pupilReacts_${side}"></div>`;
+    document.getElementById('pupilSection').appendChild(div);
+
+    // Build size buttons
+    const sizeRow=div.querySelector(`#pupilSizes_${side}`);
+    pupilSizes.forEach(sz=>{
+        const wrap=document.createElement('div');wrap.className='psd';
+        const dot=document.createElement('div');dot.className='psd-circle';dot.dataset.size=sz;
+        const s=sz*4;dot.style.cssText=`width:${s}px;height:${s}px;`;
+        const lbl=document.createElement('div');lbl.className='psd-label';lbl.textContent=sz+'mm';
+        wrap.appendChild(dot);wrap.appendChild(lbl);
+        wrap.onclick=()=>setPupilSize(side,sz);
+        sizeRow.appendChild(wrap);
+    });
+
+    // Build reaction rows
+    const reactGrid=div.querySelector(`#pupilReacts_${side}`);
+    pupilReactions.forEach(r=>{
+        const row=document.createElement('div');row.className='check-row';row.style.cssText='margin-bottom:0;padding:6px 8px;';
+        row.innerHTML=`<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label" style="font-size:11px">${r}</div>`;
+        row.onclick=()=>{reactGrid.querySelectorAll('.check-row').forEach(x=>x.classList.remove('checked'));row.classList.add('checked');pupilData[side].reaction=r;document.getElementById(`pupilRxLbl_${side}`).innerHTML=`Réaction : <strong>${r}</strong>`;};
+        reactGrid.appendChild(row);
+    });
+}
+buildPupilSide('L');buildPupilSide('R');
+
+function setPupilSize(side,sz){
+    pupilData[side].size=sz;
+    document.querySelectorAll(`#pupilSizes_${side} .psd-circle`).forEach(d=>{const s=parseInt(d.dataset.size);d.classList.toggle('sel',s===sz);});
+    // Update eye visual
+    const irisEl=document.getElementById(`pupilIris_${side}`);
+    const coreEl=document.getElementById(`pupilCore_${side}`);
+    const iSz=sz*5;const cSz=sz*3.5;
+    irisEl.style.width=iSz+'px';irisEl.style.height=iSz+'px';
+    coreEl.style.width=cSz+'px';coreEl.style.height=cSz+'px';
+    document.getElementById(`pupilSzLbl_${side}`).innerHTML=`Diamètre : <strong>${sz} mm</strong>`;
 }
 
-// RESPIRATION
-const respItems = ['Tachypnée (> 25 cycles/min)','Eupnée (12–20 cycles/min)','Bradypnée (< 10 cycles/min)'];
-const respContainer = document.getElementById('respRows');
-let selResp = '';
-respItems.forEach(r => {
-  const row = document.createElement('div');
-  row.className = 'check-row';
-  row.innerHTML = `<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label">${r}</div>`;
-  row.onclick = () => {
-    respContainer.querySelectorAll('.check-row').forEach(x => x.classList.remove('checked'));
-    row.classList.add('checked');
-    selResp = r;
-  };
-  respContainer.appendChild(row);
-});
+// ===== GLASGOW =====
+const gcsData=[{id:'yeux',label:'Ouverture des yeux',max:4,labels:['1 — Nulle','2 — À la douleur','3 — Au bruit','4 — Spontanée']},{id:'verbale',label:'Réponse verbale',max:5,labels:['1 — Nulle','2 — Sons incompréhensibles','3 — Mots inappropriés','4 — Confuse','5 — Orientée']},{id:'motrice',label:'Réponse motrice',max:6,labels:['1 — Nulle','2 — Extension','3 — Flexion anormale','4 — Retrait','5 — Localisatrice','6 — Sur ordre']}];
+const gcsVals={yeux:0,verbale:0,motrice:0};
+const gcsContainer=document.getElementById('gcsRows');
+gcsData.forEach(g=>{const row=document.createElement('div');row.className='gcs-row';let btns='';for(let i=1;i<=g.max;i++)btns+=`<button class="gcs-btn" title="${g.labels[i-1]}" onclick="setGcs('${g.id}',${i},this)">${i}</button>`;row.innerHTML=`<div class="gcs-label">${g.label}</div><div class="gcs-btns">${btns}</div>`;gcsContainer.appendChild(row);});
+function setGcs(id,val,btn){gcsVals[id]=val;btn.closest('.gcs-btns').querySelectorAll('.gcs-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');const total=gcsVals.yeux+gcsVals.verbale+gcsVals.motrice;const filled=[gcsVals.yeux,gcsVals.verbale,gcsVals.motrice].filter(v=>v>0).length;document.getElementById('gcsTotalVal').textContent=filled===3?total:'—';const interp=total>=13?'Légère (13–15)':total>=9?'Modérée (9–12)':total>=3?'Sévère (3–8)':'Sélection en cours';document.getElementById('gcsInterp').textContent=filled===3?interp:'Sélection en cours';}
 
-// ARYTHMIE
-const arytItems = ['Asystolie','Fibrillation auriculaire','Fibrillation ventriculaire','Infarctus'];
-const arytContainer = document.getElementById('arytRows');
-arytItems.forEach(r => {
-  const row = document.createElement('div');
-  row.className = 'check-row';
-  row.innerHTML = `<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label">${r}</div>`;
-  row.onclick = () => toggleCheck(row);
-  arytContainer.appendChild(row);
-});
+// ===== ARYTHMIE =====
+const arytItems=['Asystolie','Fibrillation auriculaire','Fibrillation ventriculaire','Infarctus du myocarde','Bloc auriculo-ventriculaire','Tachycardie supra-ventriculaire'];
+const arytContainer=document.getElementById('arytRows');
+arytItems.forEach(r=>{const row=document.createElement('div');row.className='check-row';row.style.marginBottom='0';row.innerHTML=`<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label">${r}</div>`;row.onclick=()=>toggleCheck(row);arytContainer.appendChild(row);});
 
-// PARAMÈTRES
-const params = [
-  {id:'ta_sys', label:'Tension artérielle', type:'ta'},
-  {id:'pls', label:'Pouls', unit:'BPM'},
-  {id:'spo2', label:'SpO₂', unit:'%'},
-  {id:'glyc', label:'Glycémie', unit:'mg/dL'},
-  {id:'temp', label:'Température', unit:'°C'},
-  {id:'heure', label:'Heure de mesure', type:'time'},
-];
-const pg = document.getElementById('paramGroup');
-params.forEach(p => {
-  const card = document.createElement('div');
-  card.className = 'param-card';
-  if (p.type === 'ta') {
-    card.innerHTML = `<label>Tension artérielle</label><div style="display:flex;align-items:center;gap:4px"><input type="number" id="ta_sys" placeholder="Sys" style="width:60px;text-align:center"><span style="color:var(--color-text-secondary)">/</span><input type="number" id="ta_dia" placeholder="Dia" style="width:60px;text-align:center"><span class="param-unit">mmHg</span></div>`;
-  } else if (p.type === 'time') {
-    card.innerHTML = `<label>${p.label}</label><input type="time" id="${p.id}">`;
-  } else {
-    card.innerHTML = `<label>${p.label}</label><div class="param-input-row"><input type="number" id="${p.id}" step="0.1" placeholder="—"><span class="param-unit">${p.unit}</span></div>`;
-  }
-  pg.appendChild(card);
-});
+// ===== OBSERVATIONS CLINIQUES =====
+const obsItems=['Cyanose centrale','Cyanose périphérique','Pâleur cutanée','Érythème / rougeur','Ictère (jaunisse)','Diaphorèse (sueurs)','Marbrures cutanées','Œdèmes des membres','Agitation / confusion','Somnolence / torpeur','Inconscience','Détresse respiratoire','Distension abdominale','Muqueuses sèches','Hypothermie','Hyperthermie','Turgescence jugulaire','TRC > 3 secondes'];
+const obsGrid=document.getElementById('obsGrid');
+obsItems.forEach(o=>{const row=document.createElement('div');row.className='check-row';row.style.marginBottom='0';row.innerHTML=`<div class="check-box"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><div class="check-label" style="font-size:12px">${o}</div>`;row.onclick=()=>toggleCheck(row);obsGrid.appendChild(row);});
 
-// MATÉRIEL
-const mats = [
-  'Compresse 7,5×7,5','Bande gaze','Pansement hémostatique','LP','Cédium®','Poche de sang',
-  'Kit réanimation','Kit chirurgical','Injecteur épinéphrine','Injecteur morphine',
-  'Injecteur fentanyl','Propofol','Garrot','Pansement terrain','Pansement compressif',
-  'ECG','LUCAS 3','Collier cervical','Pansement élastique',
-  'Accès intra-osseux','Accès intraveineux','Prise de glycémie'
-];
-const mg = document.getElementById('matGrid');
-mats.forEach(m => {
-  const item = document.createElement('div');
-  item.className = 'mat-item';
-  item.innerHTML = `<input type="number" min="0" value="0" style="width:48px;text-align:center;padding:4px"><span>${m}</span>`;
-  mg.appendChild(item);
-});
+// ===== MATÉRIEL =====
+const mats=['Compresse 7,5×7,5','Bande gaze','Pansement hémostatique','LP','Cédium®','Poche de sang','Kit réanimation','Kit chirurgical','Injecteur épinéphrine','Injecteur morphine','Injecteur fentanyl','Propofol','Garrot','Pansement terrain','Pansement compressif','ECG','LUCAS 3','Collier cervical','Pansement élastique','Accès intra-osseux','Accès intraveineux','Prise de glycémie'];
+const mg=document.getElementById('matGrid');
+mats.forEach(m=>{const item=document.createElement('div');item.className='mat-item';item.innerHTML=`<input type="number" min="0" value="0" style="width:48px;text-align:center;padding:4px;font-size:12px"><span>${m}</span>`;mg.appendChild(item);});
 
-// SIGNATURE
-const canvas = document.getElementById('sigCanvas');
-const ctx = canvas.getContext('2d');
-let drawing = false, lastX = 0, lastY = 0;
+// ===== SIGNATURE =====
+const sigCanvas=document.getElementById('sigCanvas');const sctx=sigCanvas.getContext('2d');
+let drawing=false,lastX=0,lastY=0;
+function getPos(e){const r=sigCanvas.getBoundingClientRect();const src=e.touches?e.touches[0]:e;return[(src.clientX-r.left)*(sigCanvas.width/r.width),(src.clientY-r.top)*(sigCanvas.height/r.height)];}
+sigCanvas.addEventListener('mousedown',e=>{drawing=true;[lastX,lastY]=getPos(e);});
+sigCanvas.addEventListener('mousemove',e=>{if(!drawing)return;const[x,y]=getPos(e);sctx.beginPath();sctx.moveTo(lastX,lastY);sctx.lineTo(x,y);sctx.strokeStyle='#0f172a';sctx.lineWidth=2;sctx.lineCap='round';sctx.stroke();[lastX,lastY]=[x,y];});
+sigCanvas.addEventListener('mouseup',()=>drawing=false);sigCanvas.addEventListener('mouseleave',()=>drawing=false);
+sigCanvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;[lastX,lastY]=getPos(e);},{passive:false});
+sigCanvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const[x,y]=getPos(e);sctx.beginPath();sctx.moveTo(lastX,lastY);sctx.lineTo(x,y);sctx.strokeStyle='#0f172a';sctx.lineWidth=2;sctx.lineCap='round';sctx.stroke();[lastX,lastY]=[x,y];},{passive:false});
+sigCanvas.addEventListener('touchend',()=>drawing=false);
+function clearSig(){sctx.clearRect(0,0,sigCanvas.width,sigCanvas.height);}
+function exportSig(){showToast('Signature enregistrée ✓');}
 
-function getPos(e) {
-  const r = canvas.getBoundingClientRect();
-  const src = e.touches ? e.touches[0] : e;
-  return [(src.clientX - r.left) * (canvas.width / r.width), (src.clientY - r.top) * (canvas.height / r.height)];
-}
-
-canvas.addEventListener('mousedown', e => { drawing=true; [lastX,lastY]=getPos(e); });
-canvas.addEventListener('mousemove', e => {
-  if (!drawing) return;
-  const [x,y] = getPos(e);
-  ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y);
-  ctx.strokeStyle = '#111827';
-  ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke();
-  [lastX,lastY] = [x,y];
-});
-canvas.addEventListener('mouseup', () => drawing=false);
-canvas.addEventListener('mouseleave', () => drawing=false);
-canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; [lastX,lastY]=getPos(e); }, {passive:false});
-canvas.addEventListener('touchmove', e => {
-  e.preventDefault();
-  if (!drawing) return;
-  const [x,y] = getPos(e);
-  ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y);
-  ctx.strokeStyle = '#111827';
-  ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke();
-  [lastX,lastY] = [x,y];
-}, {passive:false});
-canvas.addEventListener('touchend', () => drawing=false);
-
-function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); }
-function exportSig() { showToast('Signature enregistrée ✓'); }
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ==================== NOUVELLE FONCTION submitForm() AVEC PDF ====================
-async function submitForm() {
-    const nom = document.getElementById('nom').value.trim();
-    const prenom = document.getElementById('prenom').value.trim();
-    if (!nom || !prenom) {
-        showToast('Veuillez remplir le nom et prénom du patient');
-        return;
-    }
-
-    const numInt = document.getElementById('numIntervention').textContent;
-    const toast = document.getElementById('toast');
-
-    toast.textContent = 'Conversion en PDF en cours...';
-    toast.classList.add('show');
-
-    try {
-        const element = document.querySelector('.wrap');
-
-        const canvas = await html2canvas(element, {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            allowTaint: true,
-            backgroundColor: '#ffffff'
-        });
-
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
-        });
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-
-        const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height);
-        const finalWidth = canvas.width * ratio;
-        const finalHeight = canvas.height * ratio;
-
-        const x = (pdfWidth - finalWidth) / 2;
-        const y = (pdfHeight - finalHeight) / 2 > 0 ? (pdfHeight - finalHeight) / 2 : 5;
-
-        pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
-        pdf.save(`Fiche_Prise_en_Charge_${numInt}.pdf`);
-
-        showToast(`✅ PDF généré avec succès — ${numInt}`);
-    } catch (err) {
+// ===== PDF EXPORT — MULTI-PAGE =====
+async function submitForm(){
+    const nom=document.getElementById('nom').value.trim();
+    const prenom=document.getElementById('prenom').value.trim();
+    if(!nom||!prenom){showToast('⚠ Veuillez remplir nom et prénom du patient');return;}
+    const numInt=document.getElementById('numIntervention').textContent;
+    const overlay=document.getElementById('pdfOverlay');
+    const pdfMsg=document.getElementById('pdfMsg');
+    const pdfSub=document.getElementById('pdfSub');
+    overlay.classList.add('show');
+    pdfMsg.textContent='Capture du formulaire...';pdfSub.textContent='Préparation de la mise en page';
+    try{
+        await new Promise(r=>setTimeout(r,120));
+        const element=document.querySelector('.wrap');
+        pdfMsg.textContent='Rendu haute résolution...';pdfSub.textContent='Cela peut prendre quelques secondes';
+        const canvasEl=await html2canvas(element,{scale:2,useCORS:true,logging:false,allowTaint:true,backgroundColor:'#ffffff',windowWidth:1024,scrollX:0,scrollY:0,width:element.scrollWidth,height:element.scrollHeight});
+        pdfMsg.textContent='Découpage en pages A4...';pdfSub.textContent='Génération du document';
+        const{jsPDF}=window.jspdf;
+        const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+        const pdfW=pdf.internal.pageSize.getWidth();
+        const pdfH=pdf.internal.pageSize.getHeight();
+        const margin=10;
+        const contentW=pdfW-margin*2;
+        const scale=contentW/canvasEl.width;
+        const pageContentH=pdfH-margin*2-8; // leave 8mm for footer
+        const pageHeightPx=pageContentH/scale;
+        let pageStart=0,pageNum=0;
+        const totalPages=Math.ceil(canvasEl.height/pageHeightPx);
+        while(pageStart<canvasEl.height){
+            if(pageNum>0)pdf.addPage();
+            const sliceH=Math.min(pageHeightPx,canvasEl.height-pageStart);
+            const sliceCanvas=document.createElement('canvas');
+            sliceCanvas.width=canvasEl.width;sliceCanvas.height=Math.ceil(sliceH);
+            const sc=sliceCanvas.getContext('2d');
+            sc.fillStyle='#ffffff';sc.fillRect(0,0,sliceCanvas.width,sliceCanvas.height);
+            sc.drawImage(canvasEl,0,-pageStart);
+            const imgData=sliceCanvas.toDataURL('image/jpeg',0.93);
+            const sliceHmm=sliceH*scale;
+            pdf.addImage(imgData,'JPEG',margin,margin,contentW,sliceHmm);
+            // Footer line
+            pdf.setDrawColor(200,200,200);
+            pdf.setLineWidth(0.3);
+            pdf.line(margin,pdfH-10,pdfW-margin,pdfH-10);
+            pdf.setFontSize(7.5);pdf.setTextColor(140,140,140);
+            pdf.text(`Centre Hospitalier de Liège  ·  ${numInt}  ·  ${nom.toUpperCase()} ${prenom}`,margin,pdfH-6);
+            pdf.text(`Page ${pageNum+1} / ${totalPages}`,pdfW-margin,pdfH-6,{align:'right'});
+            pdf.setTextColor(0,0,0);
+            pageStart+=pageHeightPx;pageNum++;
+        }
+        pdfMsg.textContent='Enregistrement du PDF...';pdfSub.textContent='Téléchargement en cours';
+        const dateStr=new Date().toISOString().slice(0,10);
+        pdf.save(`Fiche_${nom}_${prenom}_${numInt}_${dateStr}.pdf`);
+        overlay.classList.remove('show');
+        showToast(`✅ PDF généré — ${pageNum} page${pageNum>1?'s':''}  —  ${numInt}`);
+    }catch(err){
         console.error(err);
+        overlay.classList.remove('show');
         showToast('❌ Erreur lors de la génération du PDF');
-    } finally {
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
     }
 }
-
-// Initialisation finale
-document.getElementById('finDateTime').addEventListener('click', e => e.stopImmediatePropagation());
 </script>
 </body>
 </html>
