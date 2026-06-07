@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CHL — Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:       #0a0d14;
+  --surface:  #111520;
+  --border:   #1e2436;
+  --bhi:      #2e3a5a;
+  --accent:   #2563eb;
+  --alo:      #1a3566;
+  --green:    #16a34a;
+  --glo:      #0f2e1f;
+  --red:      #dc2626;
+  --rlo:      #2d1515;
+  --amber:    #d97706;
+  --amlo:     #2d1f0a;
+  --text:     #e2e8f0;
+  --muted:    #64748b;
+  --mono:     'DM Mono', monospace;
+  --display:  'Syne', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;min-height:100vh}
+
+/* Header */
+header{
+  position:sticky;top:0;z-index:50;
+  border-bottom:1px solid var(--border);
+  background:rgba(10,13,20,.94);backdrop-filter:blur(12px);
+  padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.5px}
+.logo span{color:var(--accent)}
+.header-right{display:flex;align-items:center;gap:12px}
+
+/* Controls */
+.controls{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:20px 28px;border-bottom:1px solid var(--border);
+  background:var(--surface);
+}
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:320px}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted)}
+#search{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:13px;padding:8px 12px 8px 32px}
+#search:focus{outline:none;border-color:var(--accent)}
+
+.filter-tabs{display:flex;gap:4px}
+.ftab{padding:7px 14px;border-radius:6px;font-family:var(--mono);font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .15s}
+.ftab:hover{border-color:var(--bhi);color:var(--text)}
+.ftab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.months-nav{display:flex;align-items:center;gap:6px;margin-left:auto}
+.mnav-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.mnav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.month-label{font-size:13px;color:var(--text);min-width:140px;text-align:center}
+
+/* Main */
+main{padding:24px 28px;max-width:1400px;margin:0 auto}
+
+/* Legend */
+.legend{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:50%}
+.leg-dot.absent{background:var(--red)}
+.leg-dot.dispo{background:var(--green)}
+.leg-dot.partial{background:var(--amber)}
+
+/* Section title */
+.section-title{font-family:var(--display);font-size:16px;font-weight:700;margin:24px 0 12px;display:flex;align-items:center;gap:10px;color:var(--text)}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.count-badge{font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2px 8px;color:var(--muted)}
+
+/* Cards grid */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px}
+
+/* Absence card */
+.absence-card{
+  background:var(--surface);border:1px solid var(--rlo);border-left:3px solid var(--red);
+  border-radius:10px;padding:16px;position:relative;cursor:default;
+  transition:border-color .15s;
+}
+.absence-card:hover{border-color:var(--red)}
+.absence-card .ac-name{font-weight:500;font-size:13px;margin-bottom:4px}
+.absence-card .ac-dates{font-size:12px;color:var(--muted);margin-bottom:6px}
+.absence-card .ac-tag{font-size:11px;color:var(--muted)}
+
+/* Tooltip */
+.tooltip{
+  display:none;position:absolute;z-index:100;
+  top:calc(100% + 8px);left:0;
+  background:#1a1f30;border:1px solid var(--bhi);border-radius:8px;
+  padding:12px 14px;min-width:220px;max-width:300px;
+  font-size:12px;line-height:1.6;color:var(--text);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+  pointer-events:none;
+}
+.absence-card:hover .tooltip{display:block}
+.tooltip .t-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.tooltip .t-val{margin-bottom:8px}
+
+/* Dispo card */
+.dispo-card{
+  background:var(--surface);border:1px solid var(--glo);border-left:3px solid var(--green);
+  border-radius:10px;padding:16px;cursor:default;
+  transition:border-color .15s;
+}
+.dispo-card:hover{border-color:var(--green)}
+.dispo-card .dc-name{font-weight:500;font-size:13px;margin-bottom:3px}
+.dispo-card .dc-tag{font-size:11px;color:var(--muted);margin-bottom:8px}
+.dispo-card .dc-period{font-size:11px;color:var(--amber);margin-bottom:8px}
+.dispo-card .dc-horaires{font-size:12px;color:var(--muted);line-height:1.7;white-space:pre-wrap}
+
+/* Empty state */
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.empty svg{width:36px;height:36px;margin:0 auto 10px;display:block;opacity:.3}
+
+/* Loading */
+.loading{text-align:center;padding:60px;color:var(--muted)}
+.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Month tabs */
+.month-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.mtab{padding:7px 16px;border-radius:6px;font-family:var(--mono);font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .15s}
+.mtab:hover{border-color:var(--bhi);color:var(--text)}
+.mtab.active{background:var(--alo);border-color:var(--accent);color:#93c5fd}
+.mtab.current{border-color:var(--green);color:var(--green)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CHL <span>Planning</span></div>
+  <div class="header-right">
+    <span style="font-size:11px;color:var(--muted)" id="last-update">—</span>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="search" placeholder="Rechercher un nom, prénom, tag…"/>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="ftab active" data-filter="all">Tout</button>
+    <button class="ftab" data-filter="absences">📋 Absences</button>
+    <button class="ftab" data-filter="dispos">🕐 Disponibilités</button>
+  </div>
+</div>
+
+<main>
+  <div id="month-tabs" class="month-tabs"></div>
+
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot absent"></div>Absence</div>
+    <div class="leg-item"><div class="leg-dot dispo"></div>Disponible</div>
+  </div>
+
+  <div id="content">
+    <div class="loading"><div class="spinner"></div>Chargement du planning…</div>
+  </div>
+</main>
+
+<script>
+// ══════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════
+const API      = "https://ton-bot.onrender.com"; // ← URL de ton bot Render
+const GUILD_ID = "1384283719933628416";           // ← ID de ton serveur Discord
+
+const MONTHS_FR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let allData     = { absences: [], disponibilites: [] };
+let activeMonth = null; // { year, month (0-based) }
+let activeFilter = "all";
+let searchQuery  = "";
+
+// ══════════════════════════════════════════════
+//  LOAD DATA
+// ══════════════════════════════════════════════
+async function loadData() {
+  try {
+    const res  = await fetch(`${API}/api/planning?guildId=${GUILD_ID}`);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    allData = data;
+    document.getElementById("last-update").textContent = `Mis à jour : ${new Date().toLocaleTimeString("fr-FR")}`;
+    buildMonthTabs();
+    render();
+  } catch (err) {
+    document.getElementById("content").innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Erreur de chargement : ${err.message}</div>`;
+  }
+}
+
+// ══════════════════════════════════════════════
+//  MONTH TABS — 2 mois passés + mois actuel + 2 mois à venir
+// ══════════════════════════════════════════════
+function buildMonthTabs() {
+  const now    = new Date();
+  const tabs   = document.getElementById("month-tabs");
+  tabs.innerHTML = "";
+
+  for (let offset = -2; offset <= 2; offset++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const isCurrent = offset === 0;
+    const isActive  = activeMonth
+      ? (activeMonth.year === y && activeMonth.month === m)
+      : isCurrent;
+
+    if (isCurrent && !activeMonth) activeMonth = { year: y, month: m };
+
+    const btn = document.createElement("button");
+    btn.className = `mtab${isActive ? " active" : ""}${isCurrent ? " current" : ""}`;
+    btn.textContent = `${MONTHS_FR[m]} ${y}`;
+    btn.dataset.year  = y;
+    btn.dataset.month = m;
+    btn.addEventListener("click", () => {
+      activeMonth = { year: y, month: m };
+      document.querySelectorAll(".mtab").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    });
+    tabs.appendChild(btn);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  FILTER & SEARCH
+// ══════════════════════════════════════════════
+function matchSearch(item) {
+  if (!searchQuery) return true;
+  const q = searchQuery.toLowerCase();
+  const fields = [item.nom, item.prenom, item.discord_tag].filter(Boolean).join(" ").toLowerCase();
+  return fields.includes(q);
+}
+
+function absencesForMonth(year, month) {
+  return allData.absences.filter(a => {
+    const debut = new Date(a.date_debut);
+    const fin   = new Date(a.date_fin);
+    const mStart = new Date(year, month, 1);
+    const mEnd   = new Date(year, month + 1, 0);
+    return debut <= mEnd && fin >= mStart && matchSearch(a);
+  });
+}
+
+function disposForMonth(year, month) {
+  const mStart = new Date(year, month, 1).toISOString().slice(0, 10);
+  const mEnd   = new Date(year, month + 1, 0).toISOString().slice(0, 10);
+  return allData.disponibilites.filter(d => {
+    return d.valid_from <= mEnd && d.valid_until >= mStart && matchSearch(d);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════
+function render() {
+  if (!activeMonth) return;
+  const { year, month } = activeMonth;
+
+  const absences = absencesForMonth(year, month);
+  const dispos   = disposForMonth(year, month);
+
+  const content = document.getElementById("content");
+  content.innerHTML = "";
+
+  // ── Absences ──
+  if (activeFilter !== "dispos") {
+    const section = document.createElement("div");
+    const count   = absences.length;
+    section.innerHTML = `<div class="section-title">📋 Absences <span class="count-badge">${count}</span></div>`;
+
+    if (count === 0) {
+      section.innerHTML += `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Aucune absence ce mois-ci</div>`;
+    } else {
+      const grid = document.createElement("div");
+      grid.className = "cards-grid";
+      absences.forEach(a => {
+        const debut   = a.date_debut.split("-").reverse().join("/");
+        const fin     = a.date_fin.split("-").reverse().join("/");
+        const card    = document.createElement("div");
+        card.className = "absence-card";
+        card.innerHTML = `
+          <div class="ac-name">${esc(a.prenom)} ${esc(a.nom)}</div>
+          <div class="ac-dates">📅 ${debut} → ${fin}</div>
+          <div class="ac-tag">🎮 ${esc(a.discord_tag || "—")}</div>
+          <div class="tooltip">
+            <div class="t-label">Détails de l'absence</div>
+            <div class="t-val"><strong>${esc(a.prenom)} ${esc(a.nom)}</strong></div>
+            <div class="t-val">📅 Du ${debut} au ${fin}</div>
+            <div class="t-val">🎮 ${esc(a.discord_tag || "—")}</div>
+            <div class="t-label" style="margin-top:8px">Raison</div>
+            <div class="t-val">${esc(a.raison || "Non renseignée")}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      section.appendChild(grid);
+    }
+    content.appendChild(section);
+  }
+
+  // ── Disponibilités ──
+  if (activeFilter !== "absences") {
+    const section = document.createElement("div");
+    const count   = dispos.length;
+    section.innerHTML = `<div class="section-title">🕐 Disponibilités <span class="count-badge">${count}</span></div>`;
+
+    if (count === 0) {
+      section.innerHTML += `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Aucune disponibilité encodée ce mois-ci</div>`;
+    } else {
+      const grid = document.createElement("div");
+      grid.className = "cards-grid";
+      dispos.forEach(d => {
+        const from  = d.valid_from.split("-").reverse().join("/");
+        const until = d.valid_until.split("-").reverse().join("/");
+        const card  = document.createElement("div");
+        card.className = "dispo-card";
+        card.innerHTML = `
+          <div class="dc-name">${esc(d.prenom)} ${esc(d.nom)}</div>
+          <div class="dc-tag">🎮 ${esc(d.discord_tag || "—")}</div>
+          <div class="dc-period">⏱ Valide du ${from} au ${until}</div>
+          <div class="dc-horaires">${esc(d.horaires || "Horaires non renseignés")}</div>
+        `;
+        grid.appendChild(card);
+      });
+      section.appendChild(grid);
+    }
+    content.appendChild(section);
+  }
+}
+
+function esc(str) {
+  if (!str) return "";
+  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ══════════════════════════════════════════════
+//  EVENTS
+// ══════════════════════════════════════════════
+document.querySelectorAll(".ftab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".ftab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+document.getElementById("search").addEventListener("input", e => {
+  searchQuery = e.target.value.trim();
+  render();
+});
+
+// ══════════════════════════════════════════════
+//  INIT + Auto-refresh toutes les 2 min
+// ══════════════════════════════════════════════
+loadData();
+setInterval(loadData, 2 * 60 * 1000);
+</script>
+</body>
+</html>
