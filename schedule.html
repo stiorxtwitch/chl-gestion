@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CHL — Planning</title>
+<title>CHL — Planning hebdomadaire</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
 <style>
 :root {
   --bg:       #0a0d14;
   --surface:  #111520;
+  --surface2: #0d1118;
   --border:   #1e2436;
   --bhi:      #2e3a5a;
   --accent:   #2563eb;
@@ -28,7 +29,6 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;min-height:100vh}
 
-/* Header */
 header{
   position:sticky;top:0;z-index:50;
   border-bottom:1px solid var(--border);
@@ -38,15 +38,14 @@ header{
 }
 .logo{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.5px}
 .logo span{color:var(--accent)}
-.header-right{display:flex;align-items:center;gap:12px}
+.header-right{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--muted)}
 
-/* Controls */
 .controls{
   display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  padding:20px 28px;border-bottom:1px solid var(--border);
+  padding:16px 28px;border-bottom:1px solid var(--border);
   background:var(--surface);
 }
-.search-wrap{position:relative;flex:1;min-width:200px;max-width:320px}
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:300px}
 .search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted)}
 #search{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:13px;padding:8px 12px 8px 32px}
 #search:focus{outline:none;border-color:var(--accent)}
@@ -56,87 +55,120 @@ header{
 .ftab:hover{border-color:var(--bhi);color:var(--text)}
 .ftab.active{background:var(--accent);border-color:var(--accent);color:#fff}
 
-.months-nav{display:flex;align-items:center;gap:6px;margin-left:auto}
-.mnav-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.mnav-btn:hover{border-color:var(--accent);color:var(--accent)}
-.month-label{font-size:13px;color:var(--text);min-width:140px;text-align:center}
+.week-nav{display:flex;align-items:center;gap:6px;margin-left:auto}
+.wnav-btn{height:30px;padding:0 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;transition:all .15s;gap:4px}
+.wnav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.wnav-btn.today{border-color:var(--green);color:var(--green)}
+.week-label{font-size:13px;color:var(--text);min-width:200px;text-align:center;font-weight:500}
 
-/* Main */
-main{padding:24px 28px;max-width:1400px;margin:0 auto}
+main{padding:20px 28px;max-width:1600px;margin:0 auto}
 
-/* Legend */
-.legend{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.legend{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
 .leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .leg-dot{width:10px;height:10px;border-radius:50%}
 .leg-dot.absent{background:var(--red)}
 .leg-dot.dispo{background:var(--green)}
-.leg-dot.partial{background:var(--amber)}
 
-/* Section title */
-.section-title{font-family:var(--display);font-size:16px;font-weight:700;margin:24px 0 12px;display:flex;align-items:center;gap:10px;color:var(--text)}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
-.count-badge{font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2px 8px;color:var(--muted)}
-
-/* Cards grid */
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px}
-
-/* Absence card */
-.absence-card{
-  background:var(--surface);border:1px solid var(--rlo);border-left:3px solid var(--red);
-  border-radius:10px;padding:16px;position:relative;cursor:default;
-  transition:border-color .15s;
+/* ─── Weekly calendar grid ─── */
+.calendar{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;
 }
-.absence-card:hover{border-color:var(--red)}
-.absence-card .ac-name{font-weight:500;font-size:13px;margin-bottom:4px}
-.absence-card .ac-dates{font-size:12px;color:var(--muted);margin-bottom:6px}
-.absence-card .ac-tag{font-size:11px;color:var(--muted)}
+.cal-head{
+  display:grid;grid-template-columns:64px repeat(7,1fr);
+  border-bottom:1px solid var(--border);background:var(--surface2);
+}
+.cal-head .corner{border-right:1px solid var(--border)}
+.cal-head .day{
+  padding:10px 8px;text-align:center;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:2px;
+}
+.cal-head .day:last-child{border-right:none}
+.cal-head .day .dname{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.cal-head .day .dnum{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text)}
+.cal-head .day.today .dnum{color:var(--accent)}
+.cal-head .day.today{background:var(--alo)}
+
+/* All-day absences strip */
+.cal-allday{
+  display:grid;grid-template-columns:64px repeat(7,1fr);
+  border-bottom:1px solid var(--border);background:var(--surface2);
+  min-height:36px;
+}
+.cal-allday .ad-label{
+  font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);
+  padding:8px 6px;border-right:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+}
+.cal-allday .ad-cell{
+  border-right:1px solid var(--border);padding:4px;
+  display:flex;flex-direction:column;gap:3px;min-height:36px;
+}
+.cal-allday .ad-cell:last-child{border-right:none}
+.allday-chip{
+  background:var(--rlo);border-left:3px solid var(--red);
+  padding:3px 6px;border-radius:4px;font-size:11px;color:#fca5a5;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;position:relative;
+}
+.allday-chip:hover{background:#3a1a1a}
+
+/* Hour grid */
+.cal-body{
+  display:grid;grid-template-columns:64px repeat(7,1fr);
+  position:relative;
+}
+.hour-col{border-right:1px solid var(--border);background:var(--surface2)}
+.hour-label{
+  height:48px;font-size:10px;color:var(--muted);
+  padding:2px 6px;text-align:right;border-bottom:1px solid var(--border);
+}
+.day-col{border-right:1px solid var(--border);position:relative}
+.day-col:last-child{border-right:none}
+.day-col.today{background:rgba(37,99,235,.04)}
+.hour-cell{height:48px;border-bottom:1px solid var(--border)}
+
+/* Event blocks */
+.event{
+  position:absolute;left:3px;right:3px;
+  background:var(--glo);border-left:3px solid var(--green);
+  border-radius:4px;padding:4px 6px;font-size:11px;color:#86efac;
+  overflow:hidden;cursor:default;
+  transition:filter .15s;
+}
+.event:hover{filter:brightness(1.3);z-index:10}
+.event .ev-name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#bbf7d0}
+.event .ev-time{font-size:10px;color:#86efac;opacity:.85}
 
 /* Tooltip */
 .tooltip{
   display:none;position:absolute;z-index:100;
-  top:calc(100% + 8px);left:0;
+  top:calc(100% + 6px);left:0;
   background:#1a1f30;border:1px solid var(--bhi);border-radius:8px;
-  padding:12px 14px;min-width:220px;max-width:300px;
-  font-size:12px;line-height:1.6;color:var(--text);
-  box-shadow:0 8px 24px rgba(0,0,0,.5);
-  pointer-events:none;
+  padding:10px 12px;min-width:220px;max-width:280px;
+  font-size:11px;line-height:1.6;color:var(--text);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none;
 }
-.absence-card:hover .tooltip{display:block}
-.tooltip .t-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.tooltip .t-val{margin-bottom:8px}
+.allday-chip:hover .tooltip,.event:hover .tooltip{display:block}
+.tooltip .t-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.tooltip .t-val{margin-bottom:6px}
 
-/* Dispo card */
-.dispo-card{
-  background:var(--surface);border:1px solid var(--glo);border-left:3px solid var(--green);
-  border-radius:10px;padding:16px;cursor:default;
-  transition:border-color .15s;
-}
-.dispo-card:hover{border-color:var(--green)}
-.dispo-card .dc-name{font-weight:500;font-size:13px;margin-bottom:3px}
-.dispo-card .dc-tag{font-size:11px;color:var(--muted);margin-bottom:8px}
-.dispo-card .dc-period{font-size:11px;color:var(--amber);margin-bottom:8px}
-.dispo-card .dc-horaires{font-size:12px;color:var(--muted);line-height:1.7;white-space:pre-wrap}
-
-/* Empty state */
-.empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
-.empty svg{width:36px;height:36px;margin:0 auto 10px;display:block;opacity:.3}
-
-/* Loading */
+/* Loading / Empty */
 .loading{text-align:center;padding:60px;color:var(--muted)}
 .spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
 
-/* Month tabs */
-.month-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
-.mtab{padding:7px 16px;border-radius:6px;font-family:var(--mono);font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .15s}
-.mtab:hover{border-color:var(--bhi);color:var(--text)}
-.mtab.active{background:var(--alo);border-color:var(--accent);color:#93c5fd}
-.mtab.current{border-color:var(--green);color:var(--green)}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+@media (max-width:900px){
+  .cal-head,.cal-allday,.cal-body{grid-template-columns:44px repeat(7,1fr)}
+  .cal-head .day .dname{font-size:9px}
+  .cal-head .day .dnum{font-size:14px}
+  .hour-label{font-size:9px}
+  .event{font-size:10px;padding:2px 4px}
+}
 </style>
 </head>
 <body>
@@ -144,29 +176,35 @@ main{padding:24px 28px;max-width:1400px;margin:0 auto}
 <header>
   <div class="logo">CHL <span>Planning</span></div>
   <div class="header-right">
-    <span style="font-size:11px;color:var(--muted)" id="last-update">—</span>
+    <span id="last-update">—</span>
   </div>
 </header>
 
 <div class="controls">
   <div class="search-wrap">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" id="search" placeholder="Rechercher un nom, prénom, tag…"/>
+    <input type="text" id="search" placeholder="Rechercher…"/>
   </div>
 
   <div class="filter-tabs">
     <button class="ftab active" data-filter="all">Tout</button>
     <button class="ftab" data-filter="absences">📋 Absences</button>
-    <button class="ftab" data-filter="dispos">🕐 Disponibilités</button>
+    <button class="ftab" data-filter="dispos">🕐 Dispos</button>
+  </div>
+
+  <div class="week-nav">
+    <button class="wnav-btn" id="prev-week" title="Semaine précédente">‹</button>
+    <button class="wnav-btn today" id="today-btn">Aujourd'hui</button>
+    <button class="wnav-btn" id="next-week" title="Semaine suivante">›</button>
+    <div class="week-label" id="week-label">—</div>
   </div>
 </div>
 
 <main>
-  <div id="month-tabs" class="month-tabs"></div>
-
   <div class="legend">
     <div class="leg-item"><div class="leg-dot absent"></div>Absence</div>
     <div class="leg-item"><div class="leg-dot dispo"></div>Disponible</div>
+    <div class="leg-item" style="margin-left:auto">Heures affichées : <strong style="color:var(--text);margin-left:4px" id="hour-range">08h → 24h</strong></div>
   </div>
 
   <div id="content">
@@ -178,185 +216,308 @@ main{padding:24px 28px;max-width:1400px;margin:0 auto}
 // ══════════════════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════════════════
-const API      = "https://chl-bot-gestion-1.onrender.com"; // ← URL de ton bot Render
-const GUILD_ID = "1384283719933628416";           // ← ID de ton serveur Discord
+const API      = "https://chl-bot-gestion-1.onrender.com";
+const GUILD_ID = "1384283719933628416";
 
-const MONTHS_FR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+const DAYS_FR    = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+const DAYS_SHORT = ["LUN","MAR","MER","JEU","VEN","SAM","DIM"];
+const MONTHS_FR  = ["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+
+// Calendar window
+const HOUR_START = 8;
+const HOUR_END   = 24; // exclusive => slots 8..23
+const SLOT_H     = 48; // px per hour
 
 // ══════════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════════
-let allData     = { absences: [], disponibilites: [] };
-let activeMonth = null; // { year, month (0-based) }
+let allData      = { absences: [], disponibilites: [] };
+let weekStart    = startOfWeek(new Date()); // Monday
 let activeFilter = "all";
 let searchQuery  = "";
 
 // ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function startOfWeek(date){
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const day = (d.getDay() + 6) % 7; // Mon=0..Sun=6
+  d.setDate(d.getDate() - day);
+  return d;
+}
+function addDays(d, n){ const r = new Date(d); r.setDate(r.getDate()+n); return r; }
+function fmtDay(d){ return `${d.getDate()} ${MONTHS_FR[d.getMonth()]}`; }
+function ymd(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+function parseYMD(s){ const [y,m,da] = s.split("-").map(Number); return new Date(y, m-1, da); }
+function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+function esc(str){ if(!str) return ""; return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function matchSearch(item){
+  if(!searchQuery) return true;
+  const q = searchQuery.toLowerCase();
+  return [item.nom,item.prenom,item.discord_tag].filter(Boolean).join(" ").toLowerCase().includes(q);
+}
+
+// Parse horaires text into [{dayIdx, startH, endH, raw}]
+// Supports formats like:
+//   "Lundi 18h-22h"
+//   "Mar: 20:00-23:30"
+//   "Mercredi 18h30 - 22h"
+//   "Lun-Ven 19h-23h"
+const DAY_ALIASES = {
+  "lundi":0,"lun":0,"lu":0,
+  "mardi":1,"mar":1,"ma":1,
+  "mercredi":2,"mer":2,"me":2,
+  "jeudi":3,"jeu":3,"je":3,
+  "vendredi":4,"ven":4,"ve":4,
+  "samedi":5,"sam":5,"sa":5,
+  "dimanche":6,"dim":6,"di":6,
+};
+function parseHourToken(tok){
+  // "18h", "18h30", "18:30", "18"
+  const m = tok.match(/^(\d{1,2})\s*[h:]?\s*(\d{2})?$/);
+  if(!m) return null;
+  const h = parseInt(m[1],10);
+  const mn = m[2] ? parseInt(m[2],10) : 0;
+  if(h<0||h>24||mn<0||mn>59) return null;
+  return h + mn/60;
+}
+function parseHoraires(text){
+  if(!text) return [];
+  const blocks = [];
+  const lines = text.split(/[\n;]+/);
+  for(const lineRaw of lines){
+    const line = lineRaw.trim();
+    if(!line) continue;
+
+    // Range of days "Lun-Ven 19h-23h"
+    const rangeMatch = line.match(/^([a-zéû]+)\s*[-–]\s*([a-zéû]+)\s+(.+)$/i);
+    let dayIdxs = [];
+    let timePart = "";
+
+    if(rangeMatch){
+      const a = DAY_ALIASES[rangeMatch[1].toLowerCase()];
+      const b = DAY_ALIASES[rangeMatch[2].toLowerCase()];
+      if(a!=null && b!=null){
+        for(let i=a;i<=b;i++) dayIdxs.push(i);
+        timePart = rangeMatch[3];
+      }
+    }
+    if(dayIdxs.length===0){
+      // Single day
+      const sm = line.match(/^([a-zéû]+)[\s:.,-]+(.+)$/i);
+      if(sm){
+        const di = DAY_ALIASES[sm[1].toLowerCase()];
+        if(di!=null){ dayIdxs=[di]; timePart=sm[2]; }
+      }
+    }
+    if(dayIdxs.length===0) continue;
+
+    // Find time range(s) in timePart: "18h-22h" or "18:00-22:00", may have multiple
+    const timeRegex = /(\d{1,2}(?:[h:]\d{2})?h?)\s*[-–à]\s*(\d{1,2}(?:[h:]\d{2})?h?)/gi;
+    let tm;
+    while((tm = timeRegex.exec(timePart)) !== null){
+      const s = parseHourToken(tm[1].replace(/h$/,""));
+      const e = parseHourToken(tm[2].replace(/h$/,""));
+      if(s==null||e==null) continue;
+      const endH = e<=s ? 24 : e; // assume same day; treat 0 as 24 if after start
+      dayIdxs.forEach(d => blocks.push({ dayIdx:d, startH:s, endH, raw:line }));
+    }
+  }
+  return blocks;
+}
+
+// ══════════════════════════════════════════════
 //  LOAD DATA
 // ══════════════════════════════════════════════
-async function loadData() {
-  try {
+async function loadData(){
+  try{
     const res  = await fetch(`${API}/api/planning?guildId=${GUILD_ID}`);
     const data = await res.json();
-    if (!data.success) throw new Error(data.error);
+    if(!data.success) throw new Error(data.error);
     allData = data;
     document.getElementById("last-update").textContent = `Mis à jour : ${new Date().toLocaleTimeString("fr-FR")}`;
-    buildMonthTabs();
     render();
-  } catch (err) {
-    document.getElementById("content").innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Erreur de chargement : ${err.message}</div>`;
+  }catch(err){
+    document.getElementById("content").innerHTML =
+      `<div class="empty">⚠️ Erreur de chargement : ${esc(err.message)}</div>`;
   }
-}
-
-// ══════════════════════════════════════════════
-//  MONTH TABS — 2 mois passés + mois actuel + 2 mois à venir
-// ══════════════════════════════════════════════
-function buildMonthTabs() {
-  const now    = new Date();
-  const tabs   = document.getElementById("month-tabs");
-  tabs.innerHTML = "";
-
-  for (let offset = -2; offset <= 2; offset++) {
-    const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-    const y = d.getFullYear();
-    const m = d.getMonth();
-    const isCurrent = offset === 0;
-    const isActive  = activeMonth
-      ? (activeMonth.year === y && activeMonth.month === m)
-      : isCurrent;
-
-    if (isCurrent && !activeMonth) activeMonth = { year: y, month: m };
-
-    const btn = document.createElement("button");
-    btn.className = `mtab${isActive ? " active" : ""}${isCurrent ? " current" : ""}`;
-    btn.textContent = `${MONTHS_FR[m]} ${y}`;
-    btn.dataset.year  = y;
-    btn.dataset.month = m;
-    btn.addEventListener("click", () => {
-      activeMonth = { year: y, month: m };
-      document.querySelectorAll(".mtab").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      render();
-    });
-    tabs.appendChild(btn);
-  }
-}
-
-// ══════════════════════════════════════════════
-//  FILTER & SEARCH
-// ══════════════════════════════════════════════
-function matchSearch(item) {
-  if (!searchQuery) return true;
-  const q = searchQuery.toLowerCase();
-  const fields = [item.nom, item.prenom, item.discord_tag].filter(Boolean).join(" ").toLowerCase();
-  return fields.includes(q);
-}
-
-function absencesForMonth(year, month) {
-  return allData.absences.filter(a => {
-    const debut = new Date(a.date_debut);
-    const fin   = new Date(a.date_fin);
-    const mStart = new Date(year, month, 1);
-    const mEnd   = new Date(year, month + 1, 0);
-    return debut <= mEnd && fin >= mStart && matchSearch(a);
-  });
-}
-
-function disposForMonth(year, month) {
-  const mStart = new Date(year, month, 1).toISOString().slice(0, 10);
-  const mEnd   = new Date(year, month + 1, 0).toISOString().slice(0, 10);
-  return allData.disponibilites.filter(d => {
-    return d.valid_from <= mEnd && d.valid_until >= mStart && matchSearch(d);
-  });
 }
 
 // ══════════════════════════════════════════════
 //  RENDER
 // ══════════════════════════════════════════════
-function render() {
-  if (!activeMonth) return;
-  const { year, month } = activeMonth;
+function render(){
+  const weekEnd = addDays(weekStart, 6);
+  document.getElementById("week-label").textContent =
+    `${fmtDay(weekStart)} – ${fmtDay(weekEnd)} ${weekEnd.getFullYear()}`;
+  document.getElementById("hour-range").textContent =
+    `${String(HOUR_START).padStart(2,"0")}h → ${String(HOUR_END).padStart(2,"0")}h`;
 
-  const absences = absencesForMonth(year, month);
-  const dispos   = disposForMonth(year, month);
+  const today = new Date();
+  const days = [];
+  for(let i=0;i<7;i++) days.push(addDays(weekStart, i));
+
+  // Filter absences for this week
+  const weekAbsences = allData.absences.filter(a => {
+    const deb = parseYMD(a.date_debut);
+    const fin = parseYMD(a.date_fin);
+    return deb <= weekEnd && fin >= weekStart && matchSearch(a);
+  });
+
+  // Filter dispos active this week
+  const weekDispos = allData.disponibilites.filter(d => {
+    const from  = parseYMD(d.valid_from);
+    const until = parseYMD(d.valid_until);
+    return from <= weekEnd && until >= weekStart && matchSearch(d);
+  });
+
+  // Build calendar
+  const cal = document.createElement("div");
+  cal.className = "calendar";
+
+  // ── Header row ──
+  const head = document.createElement("div");
+  head.className = "cal-head";
+  head.innerHTML = `<div class="corner"></div>`;
+  days.forEach((d,i) => {
+    const isToday = sameDay(d, today);
+    head.innerHTML += `
+      <div class="day${isToday?' today':''}">
+        <div class="dname">${DAYS_SHORT[i]}</div>
+        <div class="dnum">${d.getDate()}</div>
+      </div>`;
+  });
+  cal.appendChild(head);
+
+  // ── All-day strip (absences) ──
+  if(activeFilter !== "dispos"){
+    const allday = document.createElement("div");
+    allday.className = "cal-allday";
+    allday.innerHTML = `<div class="ad-label">Absences</div>`;
+    days.forEach(day => {
+      const cell = document.createElement("div");
+      cell.className = "ad-cell";
+      weekAbsences.forEach(a => {
+        const deb = parseYMD(a.date_debut);
+        const fin = parseYMD(a.date_fin);
+        if(day >= deb && day <= fin){
+          const debStr = a.date_debut.split("-").reverse().join("/");
+          const finStr = a.date_fin.split("-").reverse().join("/");
+          const chip = document.createElement("div");
+          chip.className = "allday-chip";
+          chip.innerHTML = `
+            ${esc(a.prenom)} ${esc(a.nom)}
+            <div class="tooltip">
+              <div class="t-label">Absence</div>
+              <div class="t-val"><strong>${esc(a.prenom)} ${esc(a.nom)}</strong></div>
+              <div class="t-val">📅 Du ${debStr} au ${finStr}</div>
+              <div class="t-val">🎮 ${esc(a.discord_tag || "—")}</div>
+              <div class="t-label" style="margin-top:6px">Raison</div>
+              <div class="t-val">${esc(a.raison || "Non renseignée")}</div>
+            </div>`;
+          cell.appendChild(chip);
+        }
+      });
+      allday.appendChild(cell);
+    });
+    cal.appendChild(allday);
+  }
+
+  // ── Hour grid (dispos) ──
+  const body = document.createElement("div");
+  body.className = "cal-body";
+
+  // Hour column
+  const hourCol = document.createElement("div");
+  hourCol.className = "hour-col";
+  for(let h=HOUR_START; h<HOUR_END; h++){
+    const lbl = document.createElement("div");
+    lbl.className = "hour-label";
+    lbl.textContent = `${String(h).padStart(2,"0")}h`;
+    hourCol.appendChild(lbl);
+  }
+  body.appendChild(hourCol);
+
+  // Day columns
+  days.forEach((day, dayIdx) => {
+    const col = document.createElement("div");
+    col.className = "day-col" + (sameDay(day,today) ? " today" : "");
+    for(let h=HOUR_START; h<HOUR_END; h++){
+      const cell = document.createElement("div");
+      cell.className = "hour-cell";
+      col.appendChild(cell);
+    }
+
+    // Place dispo blocks for this weekday
+    if(activeFilter !== "absences"){
+      weekDispos.forEach(d => {
+        const from  = parseYMD(d.valid_from);
+        const until = parseYMD(d.valid_until);
+        if(day < from || day > until) return;
+
+        const blocks = parseHoraires(d.horaires);
+        blocks.filter(b => b.dayIdx === dayIdx).forEach(b => {
+          const startH = Math.max(b.startH, HOUR_START);
+          const endH   = Math.min(b.endH, HOUR_END);
+          if(endH <= startH) return;
+          const top    = (startH - HOUR_START) * SLOT_H;
+          const height = (endH - startH) * SLOT_H;
+
+          const fmtH = h => {
+            const hh = Math.floor(h);
+            const mm = Math.round((h-hh)*60);
+            return mm===0 ? `${hh}h` : `${hh}h${String(mm).padStart(2,"0")}`;
+          };
+
+          const ev = document.createElement("div");
+          ev.className = "event";
+          ev.style.top    = top + "px";
+          ev.style.height = (height - 2) + "px";
+          ev.innerHTML = `
+            <div class="ev-name">${esc(d.prenom)} ${esc(d.nom)}</div>
+            <div class="ev-time">${fmtH(b.startH)} – ${fmtH(b.endH)}</div>
+            <div class="tooltip">
+              <div class="t-label">Disponibilité</div>
+              <div class="t-val"><strong>${esc(d.prenom)} ${esc(d.nom)}</strong></div>
+              <div class="t-val">🎮 ${esc(d.discord_tag || "—")}</div>
+              <div class="t-val">🕐 ${fmtH(b.startH)} – ${fmtH(b.endH)}</div>
+              <div class="t-label" style="margin-top:6px">Période</div>
+              <div class="t-val">${d.valid_from.split("-").reverse().join("/")} → ${d.valid_until.split("-").reverse().join("/")}</div>
+              <div class="t-label" style="margin-top:6px">Horaires bruts</div>
+              <div class="t-val" style="white-space:pre-wrap">${esc(d.horaires||"—")}</div>
+            </div>`;
+          col.appendChild(ev);
+        });
+      });
+    }
+
+    body.appendChild(col);
+  });
+
+  cal.appendChild(body);
 
   const content = document.getElementById("content");
   content.innerHTML = "";
+  content.appendChild(cal);
 
-  // ── Absences ──
-  if (activeFilter !== "dispos") {
-    const section = document.createElement("div");
-    const count   = absences.length;
-    section.innerHTML = `<div class="section-title">📋 Absences <span class="count-badge">${count}</span></div>`;
-
-    if (count === 0) {
-      section.innerHTML += `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Aucune absence ce mois-ci</div>`;
-    } else {
-      const grid = document.createElement("div");
-      grid.className = "cards-grid";
-      absences.forEach(a => {
-        const debut   = a.date_debut.split("-").reverse().join("/");
-        const fin     = a.date_fin.split("-").reverse().join("/");
-        const card    = document.createElement("div");
-        card.className = "absence-card";
-        card.innerHTML = `
-          <div class="ac-name">${esc(a.prenom)} ${esc(a.nom)}</div>
-          <div class="ac-dates">📅 ${debut} → ${fin}</div>
-          <div class="ac-tag">🎮 ${esc(a.discord_tag || "—")}</div>
-          <div class="tooltip">
-            <div class="t-label">Détails de l'absence</div>
-            <div class="t-val"><strong>${esc(a.prenom)} ${esc(a.nom)}</strong></div>
-            <div class="t-val">📅 Du ${debut} au ${fin}</div>
-            <div class="t-val">🎮 ${esc(a.discord_tag || "—")}</div>
-            <div class="t-label" style="margin-top:8px">Raison</div>
-            <div class="t-val">${esc(a.raison || "Non renseignée")}</div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-      section.appendChild(grid);
-    }
-    content.appendChild(section);
-  }
-
-  // ── Disponibilités ──
-  if (activeFilter !== "absences") {
-    const section = document.createElement("div");
-    const count   = dispos.length;
-    section.innerHTML = `<div class="section-title">🕐 Disponibilités <span class="count-badge">${count}</span></div>`;
-
-    if (count === 0) {
-      section.innerHTML += `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Aucune disponibilité encodée ce mois-ci</div>`;
-    } else {
-      const grid = document.createElement("div");
-      grid.className = "cards-grid";
-      dispos.forEach(d => {
-        const from  = d.valid_from.split("-").reverse().join("/");
-        const until = d.valid_until.split("-").reverse().join("/");
-        const card  = document.createElement("div");
-        card.className = "dispo-card";
-        card.innerHTML = `
-          <div class="dc-name">${esc(d.prenom)} ${esc(d.nom)}</div>
-          <div class="dc-tag">🎮 ${esc(d.discord_tag || "—")}</div>
-          <div class="dc-period">⏱ Valide du ${from} au ${until}</div>
-          <div class="dc-horaires">${esc(d.horaires || "Horaires non renseignés")}</div>
-        `;
-        grid.appendChild(card);
-      });
-      section.appendChild(grid);
-    }
-    content.appendChild(section);
-  }
-}
-
-function esc(str) {
-  if (!str) return "";
-  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  // Footer stats
+  const stats = document.createElement("div");
+  stats.style.cssText = "margin-top:14px;display:flex;gap:18px;color:var(--muted);font-size:12px;flex-wrap:wrap";
+  stats.innerHTML = `
+    <span>📋 ${weekAbsences.length} absence${weekAbsences.length>1?"s":""}</span>
+    <span>🕐 ${weekDispos.length} disponibilité${weekDispos.length>1?"s":""}</span>
+  `;
+  content.appendChild(stats);
 }
 
 // ══════════════════════════════════════════════
 //  EVENTS
 // ══════════════════════════════════════════════
+document.getElementById("prev-week").addEventListener("click", () => { weekStart = addDays(weekStart,-7); render(); });
+document.getElementById("next-week").addEventListener("click", () => { weekStart = addDays(weekStart, 7); render(); });
+document.getElementById("today-btn").addEventListener("click", () => { weekStart = startOfWeek(new Date()); render(); });
+
 document.querySelectorAll(".ftab").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".ftab").forEach(b => b.classList.remove("active"));
@@ -372,7 +533,7 @@ document.getElementById("search").addEventListener("input", e => {
 });
 
 // ══════════════════════════════════════════════
-//  INIT + Auto-refresh toutes les 2 min
+//  INIT
 // ══════════════════════════════════════════════
 loadData();
 setInterval(loadData, 2 * 60 * 1000);
