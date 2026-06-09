@@ -27,7 +27,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.45;min-height:100vh}
 
 header{
   position:sticky;top:0;z-index:50;
@@ -75,25 +75,25 @@ main{padding:20px 28px;max-width:1600px;margin:0 auto}
   overflow:hidden;
 }
 .cal-head{
-  display:grid;grid-template-columns:64px repeat(7,1fr);
+  display:grid;grid-template-columns:72px repeat(7,1fr);
   border-bottom:1px solid var(--border);background:var(--surface2);
 }
 .cal-head .corner{border-right:1px solid var(--border)}
 .cal-head .day{
-  padding:10px 8px;text-align:center;border-right:1px solid var(--border);
+  padding:14px 8px;text-align:center;border-right:1px solid var(--border);
   display:flex;flex-direction:column;gap:2px;
 }
 .cal-head .day:last-child{border-right:none}
-.cal-head .day .dname{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.cal-head .day .dnum{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text)}
+.cal-head .day .dname{font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-weight:500}
+.cal-head .day .dnum{font-family:var(--display);font-size:22px;font-weight:800;color:var(--text)}
 .cal-head .day.today .dnum{color:var(--accent)}
 .cal-head .day.today{background:var(--alo)}
 
 /* All-day absences strip */
 .cal-allday{
-  display:grid;grid-template-columns:64px repeat(7,1fr);
+  display:grid;grid-template-columns:72px repeat(7,1fr);
   border-bottom:1px solid var(--border);background:var(--surface2);
-  min-height:36px;
+  min-height:40px;
 }
 .cal-allday .ad-label{
   font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);
@@ -107,50 +107,55 @@ main{padding:20px 28px;max-width:1600px;margin:0 auto}
 .cal-allday .ad-cell:last-child{border-right:none}
 .allday-chip{
   background:var(--rlo);border-left:3px solid var(--red);
-  padding:3px 6px;border-radius:4px;font-size:11px;color:#fca5a5;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;position:relative;
+  padding:5px 8px;border-radius:5px;font-size:12px;font-weight:500;color:#fecaca;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;position:relative;
+  transition:background .15s, transform .15s;
 }
-.allday-chip:hover{background:#3a1a1a}
+.allday-chip:hover{background:#4a1f1f;transform:translateX(2px)}
 
 /* Hour grid */
 .cal-body{
-  display:grid;grid-template-columns:64px repeat(7,1fr);
+  display:grid;grid-template-columns:72px repeat(7,1fr);
   position:relative;
 }
 .hour-col{border-right:1px solid var(--border);background:var(--surface2)}
+
 .hour-label{
-  height:48px;font-size:10px;color:var(--muted);
+  height:64px;font-size:10px;color:var(--muted);
   padding:2px 6px;text-align:right;border-bottom:1px solid var(--border);
 }
 .day-col{border-right:1px solid var(--border);position:relative}
 .day-col:last-child{border-right:none}
 .day-col.today{background:rgba(37,99,235,.04)}
-.hour-cell{height:48px;border-bottom:1px solid var(--border)}
+.hour-cell{height:64px;border-bottom:1px solid var(--border)}
 
 /* Event blocks */
 .event{
-  position:absolute;left:3px;right:3px;
+  position:absolute;left:4px;right:4px;
   background:var(--glo);border-left:3px solid var(--green);
-  border-radius:4px;padding:4px 6px;font-size:11px;color:#86efac;
-  overflow:hidden;cursor:default;
-  transition:filter .15s;
+  border-radius:6px;padding:6px 8px;font-size:12px;color:#bbf7d0;
+  overflow:hidden;cursor:pointer;
+  transition:filter .15s, transform .15s, box-shadow .15s;
 }
-.event:hover{filter:brightness(1.3);z-index:10}
-.event .ev-name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#bbf7d0}
-.event .ev-time{font-size:10px;color:#86efac;opacity:.85}
+.event:hover{filter:brightness(1.35);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.45);z-index:10}
+.event .ev-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#dcfce7;font-size:12.5px;letter-spacing:.2px}
+.event .ev-time{font-size:11px;color:#86efac;opacity:.95;margin-top:2px}
 
 /* Tooltip */
-.tooltip{
-  display:none;position:absolute;z-index:100;
-  top:calc(100% + 6px);left:0;
-  background:#1a1f30;border:1px solid var(--bhi);border-radius:8px;
-  padding:10px 12px;min-width:220px;max-width:280px;
-  font-size:11px;line-height:1.6;color:var(--text);
-  box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none;
+.tooltip{display:none}
+#floating-tooltip{
+  position:fixed;z-index:1000;pointer-events:none;
+  background:#1a1f30;border:1px solid var(--bhi);border-radius:10px;
+  padding:12px 14px;min-width:240px;max-width:320px;
+  font-size:12.5px;line-height:1.65;color:var(--text);
+  box-shadow:0 12px 32px rgba(0,0,0,.6);
+  opacity:0;transform:translateY(-4px);transition:opacity .12s, transform .12s;
 }
-.allday-chip:hover .tooltip,.event:hover .tooltip{display:block}
-.tooltip .t-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.tooltip .t-val{margin-bottom:6px}
+#floating-tooltip.show{opacity:1;transform:translateY(0)}
+#floating-tooltip .t-label{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600}
+#floating-tooltip .t-val{margin-bottom:8px;color:var(--text)}
+#floating-tooltip .t-val:last-child{margin-bottom:0}
+#floating-tooltip strong{color:#fff;font-weight:600}
 
 /* Loading / Empty */
 .loading{text-align:center;padding:60px;color:var(--muted)}
@@ -226,7 +231,7 @@ const MONTHS_FR  = ["janv.","févr.","mars","avr.","mai","juin","juil.","août",
 // Calendar window
 const HOUR_START = 8;
 const HOUR_END   = 24; // exclusive => slots 8..23
-const SLOT_H     = 48; // px per hour
+const SLOT_H     = 64; // px per hour
 
 // ══════════════════════════════════════════════
 //  STATE
@@ -537,6 +542,44 @@ document.getElementById("search").addEventListener("input", e => {
 // ══════════════════════════════════════════════
 loadData();
 setInterval(loadData, 2 * 60 * 1000);
+</script>
+
+<div id="floating-tooltip" role="tooltip"></div>
+<script>
+(function(){
+  const tip = document.getElementById('floating-tooltip');
+  let activeEl = null;
+  function show(e){
+    const target = e.target.closest('.event, .allday-chip');
+    if(!target || target === activeEl) return;
+    const inner = target.querySelector('.tooltip');
+    if(!inner) return;
+    activeEl = target;
+    tip.innerHTML = inner.innerHTML;
+    tip.classList.add('show');
+    position(e);
+  }
+  function position(e){
+    const pad = 14;
+    const r = tip.getBoundingClientRect();
+    let x = e.clientX + pad;
+    let y = e.clientY + pad;
+    if(x + r.width  > window.innerWidth  - 8) x = e.clientX - r.width  - pad;
+    if(y + r.height > window.innerHeight - 8) y = e.clientY - r.height - pad;
+    tip.style.left = Math.max(8,x) + 'px';
+    tip.style.top  = Math.max(8,y) + 'px';
+  }
+  function hide(e){
+    if(activeEl && !e.target.closest('.event, .allday-chip')){
+      activeEl = null;
+      tip.classList.remove('show');
+    }
+  }
+  document.addEventListener('mouseover', show);
+  document.addEventListener('mousemove', e => { if(activeEl) position(e); });
+  document.addEventListener('mouseout', hide);
+  document.addEventListener('scroll', () => { activeEl=null; tip.classList.remove('show'); }, true);
+})();
 </script>
 </body>
 </html>
